@@ -28,13 +28,13 @@ export default function DoAn() {
 
   const filteredProjects = useMemo(() => {
     return projectsData.filter((project) => {
-      const matchesSearch = 
+      const matchesSearch =
         project.tenDoAn.toLowerCase().includes(searchQuery.toLowerCase()) ||
         project.cbhd.toLowerCase().includes(searchQuery.toLowerCase()) ||
         project.boMon.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       const matchesBoMon = !selectedBoMon || project.boMon === selectedBoMon;
-      
+
       return matchesSearch && matchesBoMon;
     });
   }, [searchQuery, selectedBoMon]);
@@ -64,7 +64,7 @@ export default function DoAn() {
             <div className="flex h-10 w-10 items-center justify-center rounded-lg gradient-primary">
               <FolderKanban className="h-5 w-5 text-primary-foreground" />
             </div>
-            <h1 className="text-3xl font-bold text-foreground">Đồ án năm 4</h1>
+            <h1 className="text-3xl font-bold text-foreground">Đồ án năm 4 (Dữ liệu HK251 của K22)</h1>
           </div>
           <p className="text-muted-foreground">
             Danh sách các đồ án tốt nghiệp năm 4 - Khoa Khoa học và Kỹ thuật Máy tính
@@ -120,13 +120,12 @@ export default function DoAn() {
         {/* Projects Grid */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {paginatedProjects.map((project) => (
-            <Card 
-              key={project.id} 
+            <Card
               className="group transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1"
             >
               <CardHeader className="pb-3">
-                <Badge 
-                  variant="outline" 
+                <Badge
+                  variant="outline"
                   className={boMonColors[project.boMon] || "bg-muted text-muted-foreground"}
                 >
                   {project.boMon}
@@ -173,7 +172,7 @@ export default function DoAn() {
               <ChevronLeft className="h-4 w-4" />
               Previous
             </Button>
-            
+
             <div className="flex gap-1">
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let page: number;
@@ -199,7 +198,7 @@ export default function DoAn() {
                   </Button>
                 );
               })}
-              
+
               {totalPages > 5 && currentPage < totalPages - 2 && (
                 <>
                   <span className="px-2 py-1 text-muted-foreground">...</span>
