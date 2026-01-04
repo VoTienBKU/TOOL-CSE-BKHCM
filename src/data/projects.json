@@ -1,0 +1,14 @@
+[
+  { "id": 1, "boMon": "Khoa học Máy tính", "tenDoAn": "Hệ thống quản lý đồ án Khoa Khoa học và Kỹ thuật Máy tính tích hợp AI hỗ trợ định hướng đề tài và hỏi đáp", "cbhd": "Trần Ngọc Bảo Duy" },
+  { "id": 2, "boMon": "Hệ thống thông tin", "tenDoAn": "Nghiên cứu xây dựng các giải pháp ước lượng thời gian đến đích và tìm đường hiệu quả", "cbhd": "Trần Minh Quang" },
+  { "id": 3, "boMon": "Khoa học Máy tính", "tenDoAn": "Xây dựng mô hình vật lý hỗ trợ dạy và học môn Vật lý 12", "cbhd": "Trần Giang Sơn" },
+  { "id": 4, "boMon": "Khoa học Máy tính", "tenDoAn": "Viết chương trình hỗ trợ dạy và học môn Hóa học lớp 10", "cbhd": "Trần Giang Sơn" },
+  { "id": 5, "boMon": "Khoa học Máy tính", "tenDoAn": "Viết chương trình hỗ trợ dạy và học môn Vật lí lớp 11", "cbhd": "Trần Giang Sơn" },
+  { "id": 6, "boMon": "Khoa học Máy tính", "tenDoAn": "Viết chương trình hỗ trợ dạy và học môn Hóa học lớp 11", "cbhd": "Trần Giang Sơn" },
+  { "id": 7, "boMon": "Kỹ thuật Máy tính", "tenDoAn": "Thiết kế hệ thống IoT giám sát môi trường thông minh", "cbhd": "Nguyễn Văn An" },
+  { "id": 8, "boMon": "Hệ thống thông tin", "tenDoAn": "Xây dựng hệ thống đề xuất sản phẩm dựa trên Machine Learning", "cbhd": "Lê Thị Bích" },
+  { "id": 9, "boMon": "Kỹ thuật Phần mềm", "tenDoAn": "Phát triển ứng dụng di động quản lý sức khỏe cá nhân", "cbhd": "Phạm Hoàng Cường" },
+  { "id": 10, "boMon": "Khoa học Máy tính", "tenDoAn": "Nghiên cứu và ứng dụng Deep Learning trong nhận dạng giọng nói tiếng Việt", "cbhd": "Võ Minh Đức" },
+  { "id": 11, "boMon": "Hệ thống thông tin", "tenDoAn": "Xây dựng dashboard phân tích dữ liệu kinh doanh realtime", "cbhd": "Trần Minh Quang" },
+  { "id": 12, "boMon": "Kỹ thuật Máy tính", "tenDoAn": "Thiết kế vi mạch xử lý tín hiệu số DSP", "cbhd": "Nguyễn Văn An" }
+]
