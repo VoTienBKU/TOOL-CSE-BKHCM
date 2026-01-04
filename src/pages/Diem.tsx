@@ -5,21 +5,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  GradeItem, 
-  calculateGPA, 
-  isGradedSubject, 
+import {
+  GradeItem,
+  calculateGPA,
+  isGradedSubject,
   getGradeColor,
   convertToGPA4
 } from "@/types/grade";
 import { BarChart3, Upload, Calculator, AlertCircle } from "lucide-react";
 
-// Lọc và xử lý trùng mã môn - lấy điểm cao nhất
 function processGrades(grades: GradeItem[]): GradeItem[] {
-  // Bỏ TC=0 và điểm không hợp lệ (DT, MT, KD...)
   const filtered = grades.filter(g => g.soTinChi > 0 && isGradedSubject(g.diemChu));
-  
-  // Gộp theo mã môn, giữ điểm cao hơn
+
   const gradeMap = new Map<string, GradeItem>();
   filtered.forEach(grade => {
     const existing = gradeMap.get(grade.maMonHoc);
@@ -27,7 +24,7 @@ function processGrades(grades: GradeItem[]): GradeItem[] {
       gradeMap.set(grade.maMonHoc, grade);
     }
   });
-  
+
   return Array.from(gradeMap.values());
 }
 
@@ -152,7 +149,7 @@ export default function Diem() {
         {grades.length > 0 && (
           <div className="space-y-6">
             {/* Stats Cards */}
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2">
               <Card className="gradient-primary text-primary-foreground">
                 <CardContent className="pt-6">
                   <div className="text-center">
@@ -165,15 +162,7 @@ export default function Diem() {
                 <CardContent className="pt-6">
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground">Tổng tín chỉ</p>
-                    <p className="text-4xl font-bold text-foreground">{totalCredits}</p>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="text-center">
-                    <p className="text-sm text-muted-foreground">Tín chỉ tính GPA</p>
-                    <p className="text-4xl font-bold text-foreground">{gradedCredits}</p>
+                    <p className="text-4xl font-bold text-foreground">{totalCredits}/128</p>
                   </div>
                 </CardContent>
               </Card>

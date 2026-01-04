@@ -32,26 +32,25 @@ export function convertToGPA4(diemChu: string): number {
     "D+": 1.5,
     "D": 1.0,
     "F": 0,
-    // Special grades
-    "DT": 0, // Đạt (Pass) - excluded from GPA
-    "MT": 0, // Miễn (Exempt) - excluded from GPA
+    "DT": 4,
+    "MT": 0,
   };
 
   return gradeMap[diemChu] ?? 0;
 }
 
 export function isGradedSubject(diemChu: string): boolean {
-  const excludedGrades = ["DT", "MT", "KD", ""];
+  const excludedGrades = ["MT", "KD", ""];
   return !excludedGrades.includes(diemChu);
 }
 
 export function calculateGPA(grades: GradeItem[]): number {
   const gradedItems = grades.filter((g) => isGradedSubject(g.diemChu));
-  
+
   if (gradedItems.length === 0) return 0;
 
   const totalPoints = gradedItems.reduce((sum, grade) => {
-    return sum + convertToGPA4(grade.diemChu) * grade.soTinChi;
+    return sum + (grade.diemChu != "DT" ? convertToGPA4(grade.diemChu) * grade.soTinChi : 0);
   }, 0);
 
   const totalCredits = gradedItems.reduce((sum, grade) => sum + grade.soTinChi, 0);
