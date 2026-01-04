@@ -230,17 +230,48 @@ export default function Diem() {
         <Card>
           <CardHeader>
             <CardTitle>Nhập JSON</CardTitle>
+            <CardDescription className="text-xs leading-relaxed">
+              Vào{" "}
+              <a
+                href="https://mybk.hcmut.edu.vn/app/sinh-vien/ket-qua-hoc-tap/bang-diem-mon-hoc"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline text-primary"
+              >
+                myBK &gt; Bảng điểm môn học
+              </a>
+              , mở <b>F12</b> → tab <b>Console</b> → tìm dòng{" "}
+              <code className="px-1 bg-muted rounded">Array(…)</code> trong file
+              <code className="px-1 bg-muted rounded ml-1">
+                bang-diem-mon-hoc.js
+              </code>
+              , copy toàn bộ và dán vào đây.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Textarea
               value={jsonInput}
               onChange={e => setJsonInput(e.target.value)}
               className="min-h-[150px] font-mono"
+              placeholder="Dán JSON bảng điểm tại đây..."
             />
-            <Button onClick={parseGrades}>
-              <Calculator className="mr-2 h-4 w-4" />
-              Phân tích
-            </Button>
+
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <Button onClick={parseGrades}>
+                <Calculator className="mr-2 h-4 w-4" />
+                Phân tích
+              </Button>
+
+              {/* Hướng dẫn tính điểm */}
+              <div className="text-xs text-muted-foreground space-y-1">
+                <p>
+                  <span className="font-semibold text-red-600">F</span>: không tính tín chỉ, không tính GPA
+                </p>
+                <p>
+                  <span className="font-semibold text-orange-600">DT</span>: tính tín chỉ, không tính GPA
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
