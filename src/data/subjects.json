@@ -1,0 +1,17 @@
+[
+  { "maMonHoc": "LA1003", "tenMonHoc": "Anh văn 1", "soTinChi": 2 },
+  { "maMonHoc": "LA1005", "tenMonHoc": "Anh văn 2", "soTinChi": 2 },
+  { "maMonHoc": "MT1003", "tenMonHoc": "Giải tích 1", "soTinChi": 4 },
+  { "maMonHoc": "MT1005", "tenMonHoc": "Giải tích 2", "soTinChi": 4 },
+  { "maMonHoc": "PH1003", "tenMonHoc": "Vật lý 1", "soTinChi": 4 },
+  { "maMonHoc": "CO1005", "tenMonHoc": "Nhập môn điện toán", "soTinChi": 3 },
+  { "maMonHoc": "CO1023", "tenMonHoc": "Kỹ thuật lập trình", "soTinChi": 3 },
+  { "maMonHoc": "CO2003", "tenMonHoc": "Cấu trúc dữ liệu và giải thuật", "soTinChi": 4 },
+  { "maMonHoc": "CO2007", "tenMonHoc": "Kiến trúc máy tính", "soTinChi": 3 },
+  { "maMonHoc": "CO2013", "tenMonHoc": "Hệ điều hành", "soTinChi": 4 },
+  { "maMonHoc": "CO2017", "tenMonHoc": "Mạng máy tính", "soTinChi": 4 },
+  { "maMonHoc": "CO3001", "tenMonHoc": "Công nghệ phần mềm", "soTinChi": 3 },
+  { "maMonHoc": "CO3005", "tenMonHoc": "Nguyên lý ngôn ngữ lập trình", "soTinChi": 4 },
+  { "maMonHoc": "CO3015", "tenMonHoc": "Cơ sở dữ liệu", "soTinChi": 4 },
+  { "maMonHoc": "SP1037", "tenMonHoc": "Triết học Mác - Lênin", "soTinChi": 3 }
+]
