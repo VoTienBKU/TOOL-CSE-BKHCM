@@ -17,6 +17,7 @@ import {
   getGradeColor,
   convertToGPA4,
   REQUIRED_COURSES,
+  ADVANCED_ELECTIVE_COURSES
 } from "@/types/grade";
 import {
   BarChart3,
@@ -40,10 +41,10 @@ const GRADE_OPTIONS = [
 ] as const;
 
 /* ===================== HELPERS ===================== */
-
 function buildCourses(grades: GradeItem[]): GradeWithOriginal[] {
   const gradeMap = new Map<string, GradeItem>();
 
+  /* ===== LẤY ĐIỂM TỐT NHẤT CHO MỖI MÔN ===== */
   grades
     .filter(g => g.soTinChi > 0 && isGradedSubject(g.diemChu))
     .forEach(g => {
@@ -56,6 +57,7 @@ function buildCourses(grades: GradeItem[]): GradeWithOriginal[] {
   /* ===== REQUIRED COURSES ===== */
   const required: GradeWithOriginal[] = REQUIRED_COURSES.map(rc => {
     const real = gradeMap.get(rc.monHocId);
+
     if (real) {
       gradeMap.delete(rc.monHocId);
       return {
@@ -76,18 +78,46 @@ function buildCourses(grades: GradeItem[]): GradeWithOriginal[] {
     };
   });
 
-  /* ===== OPTIONAL & FREE COURSES ===== */
-  const optionalSorted = Array.from(gradeMap.values())
-    .map(g => ({
+  /* ===== ADVANCED ELECTIVE COURSES ===== */
+  const advancedElectives: GradeWithOriginal[] =
+    ADVANCED_ELECTIVE_COURSES.map(ec => {
+      const real = gradeMap.get(ec.monHocId);
+
+      if (real) {
+        gradeMap.delete(ec.monHocId);
+        return {
+          ...real,
+          originalGrade: real.diemChu,
+          isRequired: false,
+        };
+      }
+
+      return {
+        maMonHoc: ec.monHocId,
+        tenMonHoc: ec.tenMonHoc,
+        soTinChi: ec.soTinChi,
+        diemChu: ec.Dudoan_diemChu,
+        originalGrade: ec.Dudoan_diemChu,
+        isPredicted: true,
+        isRequired: false,
+      };
+    });
+
+  /* ===== CÁC MÔN CÒN LẠI (TỰ DO) ===== */
+  const freeElectives: GradeWithOriginal[] = Array.from(gradeMap.values()).map(
+    g => ({
       ...g,
       originalGrade: g.diemChu,
       isRequired: false,
-    }))
-    .sort(
-      (a, b) => convertToGPA4(b.diemChu) - convertToGPA4(a.diemChu)
-    );
+    })
+  );
 
-  const optional: GradeWithOriginal[] = optionalSorted.map((c, index) => {
+  /* ===== GỘP + CHỌN 8 MÔN TỐT NHẤT ===== */
+  const optionalAll = [...advancedElectives, ...freeElectives].sort(
+    (a, b) => convertToGPA4(b.diemChu) - convertToGPA4(a.diemChu)
+  );
+
+  const optionalFinal = optionalAll.map((c, index) => {
     if (index < 8) return c;
     return {
       ...c,
@@ -96,7 +126,7 @@ function buildCourses(grades: GradeItem[]): GradeWithOriginal[] {
     };
   });
 
-  return [...required, ...optional];
+  return [...required, ...optionalFinal];
 }
 
 /* ===================== COMPONENT ===================== */
@@ -229,7 +259,7 @@ export default function Diem() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Nhập JSON</CardTitle>
+            <CardTitle>Hướng dẫn nhập JSON</CardTitle>
             <CardDescription className="text-xs leading-relaxed">
               Vào{" "}
               <a
@@ -245,7 +275,7 @@ export default function Diem() {
               <code className="px-1 bg-muted rounded ml-1">
                 bang-diem-mon-hoc.js
               </code>
-              , copy toàn bộ và dán vào đây.
+              , kích chuột phải vào array sau đó chọn copy object
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -253,7 +283,7 @@ export default function Diem() {
               value={jsonInput}
               onChange={e => setJsonInput(e.target.value)}
               className="min-h-[150px] font-mono"
-              placeholder="Dán JSON bảng điểm tại đây..."
+              placeholder="Hướng dẫn bên trên và ng tính tín chỉ, không tính GPADán JSON bảng điểm tại đây..."
             />
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -262,8 +292,7 @@ export default function Diem() {
                 Phân tích
               </Button>
 
-              {/* Hướng dẫn tính điểm */}
-              <div className="text-xs text-muted-foreground space-y-1">
+              <div className="space-y-1">
                 <p>
                   <span className="font-semibold text-red-600">F</span>: không tính tín chỉ, không tính GPA
                 </p>

@@ -1,4 +1,4 @@
-import { GraduationCap, Mail, MapPin, MessageCircle } from "lucide-react";
+import { Facebook, Phone, GraduationCap, Mail, MapPin, MessageCircle } from "lucide-react";
 
 export function Footer() {
   return (
@@ -19,22 +19,29 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="font-semibold text-foreground">Liên hệ</h3>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-primary" />
-                <span>support@cse.bkhcm.edu.vn</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <MessageCircle className="h-4 w-4 text-primary" />
-                <span>Thảo luận kiến thức CNTT trường BK</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary" />
-                <span>TP. Hồ Chí Minh, Việt Nam</span>
-              </li>
-            </ul>
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-foreground">Liên hệ</h3>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <Mail className="h-4 w-4" />
+                <span>votien10cham@gmail.com</span>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <Facebook className="h-4 w-4" />
+                <a
+                  href="https://www.facebook.com/groups/khmt.ktmt.cse.bku"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-blue-600"
+                >
+                  Thảo luận kiến thức CNTT trường BK
+                </a>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4" />
+                <span>TP Hồ Chí Minh, Việt Nam</span>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-4">
@@ -42,7 +49,6 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>• Xem và tính điểm GPA</li>
               <li>• Tra cứu đồ án năm 4</li>
-              <li>• Thông báo qua Discord</li>
             </ul>
           </div>
         </div>
