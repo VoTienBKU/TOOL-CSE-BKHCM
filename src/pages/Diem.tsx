@@ -1,205 +1,313 @@
 import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import {
   GradeItem,
   calculateGPA,
   isGradedSubject,
   getGradeColor,
-  convertToGPA4
+  convertToGPA4,
+  REQUIRED_COURSES,
 } from "@/types/grade";
-import { BarChart3, Upload, Calculator, AlertCircle } from "lucide-react";
+import {
+  BarChart3,
+  Calculator,
+  AlertCircle,
+  RotateCcw,
+} from "lucide-react";
 
-function processGrades(grades: GradeItem[]): GradeItem[] {
-  const filtered = grades.filter(g => g.soTinChi > 0 && isGradedSubject(g.diemChu));
+/* ===================== TYPES ===================== */
 
+type GradeWithOriginal = GradeItem & {
+  originalGrade: string;
+  isPredicted?: boolean;
+  isRequired?: boolean;
+};
+
+/* ===================== CONSTANTS ===================== */
+
+const GRADE_OPTIONS = [
+  "A+", "A", "B+", "B", "C+", "C", "D+", "D", "F", "DT",
+] as const;
+
+/* ===================== HELPERS ===================== */
+
+function buildCourses(grades: GradeItem[]): GradeWithOriginal[] {
   const gradeMap = new Map<string, GradeItem>();
-  filtered.forEach(grade => {
-    const existing = gradeMap.get(grade.maMonHoc);
-    if (!existing || convertToGPA4(grade.diemChu) > convertToGPA4(existing.diemChu)) {
-      gradeMap.set(grade.maMonHoc, grade);
+
+  grades
+    .filter(g => g.soTinChi > 0 && isGradedSubject(g.diemChu))
+    .forEach(g => {
+      const ex = gradeMap.get(g.maMonHoc);
+      if (!ex || convertToGPA4(g.diemChu) > convertToGPA4(ex.diemChu)) {
+        gradeMap.set(g.maMonHoc, g);
+      }
+    });
+
+  /* ===== REQUIRED COURSES ===== */
+  const required: GradeWithOriginal[] = REQUIRED_COURSES.map(rc => {
+    const real = gradeMap.get(rc.monHocId);
+    if (real) {
+      gradeMap.delete(rc.monHocId);
+      return {
+        ...real,
+        originalGrade: real.diemChu,
+        isRequired: true,
+      };
     }
+
+    return {
+      maMonHoc: rc.monHocId,
+      tenMonHoc: rc.tenMonHoc,
+      soTinChi: rc.soTinChi,
+      diemChu: rc.Dudoan_diemChu,
+      originalGrade: rc.Dudoan_diemChu,
+      isPredicted: true,
+      isRequired: true,
+    };
   });
 
-  return Array.from(gradeMap.values());
+  /* ===== OPTIONAL & FREE COURSES ===== */
+  const optionalSorted = Array.from(gradeMap.values())
+    .map(g => ({
+      ...g,
+      originalGrade: g.diemChu,
+      isRequired: false,
+    }))
+    .sort(
+      (a, b) => convertToGPA4(b.diemChu) - convertToGPA4(a.diemChu)
+    );
+
+  const optional: GradeWithOriginal[] = optionalSorted.map((c, index) => {
+    if (index < 8) return c;
+    return {
+      ...c,
+      diemChu: "F",
+      originalGrade: "F",
+    };
+  });
+
+  return [...required, ...optional];
 }
 
-const sampleData = `[
-  {
-    "maMonHoc": "LA1003",
-    "tenMonHoc": "Anh văn 1",
-    "soTinChi": 2,
-    "diemChu": "B+"
-  },
-  {
-    "maMonHoc": "MT1003",
-    "tenMonHoc": "Giải tích 1",
-    "soTinChi": 4,
-    "diemChu": "A"
-  }
-]`;
+/* ===================== COMPONENT ===================== */
 
 export default function Diem() {
   const [jsonInput, setJsonInput] = useState("");
-  const [grades, setGrades] = useState<GradeItem[]>([]);
+  const [courses, setCourses] = useState<GradeWithOriginal[]>([]);
   const { toast } = useToast();
 
   const parseGrades = () => {
     try {
       const parsed = JSON.parse(jsonInput);
-      if (!Array.isArray(parsed)) {
-        throw new Error("Dữ liệu phải là một mảng");
-      }
-      const processed = processGrades(parsed);
-      setGrades(processed);
+      if (!Array.isArray(parsed)) throw new Error();
+
+      const merged = buildCourses(parsed);
+      setCourses(merged);
+
       toast({
-        title: "Thành công!",
-        description: `Đã tải ${processed.length} môn học (lọc từ ${parsed.length} bản ghi)`,
+        title: "Thành công",
+        description: `Đã xử lý ${merged.length} môn`,
       });
-    } catch (error) {
+    } catch {
       toast({
-        title: "Lỗi phân tích dữ liệu",
-        description: "Vui lòng kiểm tra định dạng JSON",
+        title: "Lỗi",
+        description: "JSON không hợp lệ",
         variant: "destructive",
       });
     }
   };
 
-  const loadSample = () => {
-    setJsonInput(sampleData);
+  const updateGrade = (id: string, diemChu: string) => {
+    setCourses(prev =>
+      prev.map(c =>
+        c.maMonHoc === id ? { ...c, diemChu } : c
+      )
+    );
   };
 
-  const gpa = calculateGPA(grades);
-  const totalCredits = grades.reduce((sum, g) => sum + g.soTinChi, 0);
-  const gradedCredits = grades
-    .filter((g) => isGradedSubject(g.diemChu))
-    .reduce((sum, g) => sum + g.soTinChi, 0);
+  const resetGrade = (id: string) => {
+    setCourses(prev =>
+      prev.map(c =>
+        c.maMonHoc === id
+          ? { ...c, diemChu: c.originalGrade }
+          : c
+      )
+    );
+  };
 
-  // Chia thành 2 cột
-  const midIndex = Math.ceil(grades.length / 2);
-  const leftColumn = grades.slice(0, midIndex);
-  const rightColumn = grades.slice(midIndex);
+  /* ===================== STATS ===================== */
 
-  const renderGradeItem = (grade: GradeItem, index: number) => (
-    <div key={index} className="flex items-center justify-between py-2.5 border-b border-border/50 last:border-0">
-      <div className="flex-1 min-w-0 pr-2">
-        <p className="text-xs text-muted-foreground font-mono">{grade.maMonHoc}</p>
-        <p className="text-sm font-medium truncate">{grade.tenMonHoc}</p>
+  const gpa = calculateGPA(courses);
+
+  const requiredCredits = courses
+    .filter(c => c.isRequired && c.diemChu !== "F")
+    .reduce((s, c) => s + c.soTinChi, 0);
+
+  const optionalCredits = courses
+    .filter(
+      c =>
+        !c.isRequired &&
+        c.diemChu !== "F"
+    )
+    .reduce((s, c) => s + c.soTinChi, 0);
+
+  const requiredCourses = courses.filter(c => c.isRequired);
+  const optionalCourses = courses.filter(c => !c.isRequired);
+
+  /* ===================== RENDER ITEM ===================== */
+
+  const renderItem = (c: GradeWithOriginal) => {
+    const changed = c.diemChu !== c.originalGrade;
+
+    return (
+      <div
+        key={c.maMonHoc}
+        className={`
+          p-3 rounded-md border flex justify-between gap-2
+          ${changed ? "bg-red-50 border-red-300" : "border-border"}
+          ${c.isPredicted ? "ring-1 ring-dashed ring-orange-400" : ""}
+        `}
+      >
+        <div className="min-w-0">
+          <p className="text-xs font-mono text-muted-foreground">
+            {c.maMonHoc}
+          </p>
+          <p className="text-sm font-medium truncate">
+            {c.tenMonHoc}
+          </p>
+          {c.isPredicted && (
+            <p className="text-xs text-orange-600">(Điểm dự đoán)</p>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-xs">{c.soTinChi} TC</span>
+
+          <select
+            value={c.diemChu}
+            onChange={e => updateGrade(c.maMonHoc, e.target.value)}
+            className={`${getGradeColor(c.diemChu)} text-xs px-2 py-1 rounded-md border`}
+          >
+            {GRADE_OPTIONS.map(g => (
+              <option key={g} value={g}>{g}</option>
+            ))}
+          </select>
+
+          {changed && (
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => resetGrade(c.maMonHoc)}
+            >
+              <RotateCcw className="h-4 w-4 text-red-500" />
+            </Button>
+          )}
+        </div>
       </div>
-      <div className="flex items-center gap-2 shrink-0">
-        <span className="text-xs text-muted-foreground">{grade.soTinChi} TC</span>
-        <Badge className={`${getGradeColor(grade.diemChu)} min-w-[42px] justify-center`} variant="outline">
-          {grade.diemChu}
-        </Badge>
-      </div>
-    </div>
-  );
+    );
+  };
+
+  /* ===================== UI ===================== */
 
   return (
     <Layout>
-      <div className="container py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg gradient-primary">
-              <BarChart3 className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <h1 className="text-3xl font-bold text-foreground">Xem điểm & Tính GPA</h1>
-          </div>
-          <p className="text-muted-foreground">
-            Nhập dữ liệu điểm JSON và tính điểm trung bình hệ 4
-          </p>
+      <div className="container py-8 space-y-6">
+        <div className="flex items-center gap-3">
+          <BarChart3 />
+          <h1 className="text-3xl font-bold">Xem điểm & Dự đoán GPA</h1>
         </div>
 
-        {/* Input Section */}
-        <Card className="mb-6">
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Upload className="h-5 w-5" />
-              Nhập dữ liệu JSON
-            </CardTitle>
-            <CardDescription>
-              Dán dữ liệu điểm từ API vào đây
-            </CardDescription>
+            <CardTitle>Nhập JSON</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <Textarea
-              placeholder="Dán dữ liệu JSON điểm tại đây..."
-              className="min-h-[150px] font-mono text-sm"
               value={jsonInput}
-              onChange={(e) => setJsonInput(e.target.value)}
+              onChange={e => setJsonInput(e.target.value)}
+              className="min-h-[150px] font-mono"
             />
-            <div className="flex gap-2">
-              <Button onClick={parseGrades} className="flex-1">
-                <Calculator className="mr-2 h-4 w-4" />
-                Phân tích điểm
-              </Button>
-              <Button variant="outline" onClick={loadSample}>
-                Dữ liệu mẫu
-              </Button>
-            </div>
+            <Button onClick={parseGrades}>
+              <Calculator className="mr-2 h-4 w-4" />
+              Phân tích
+            </Button>
           </CardContent>
         </Card>
 
-        {/* Results Section */}
-        {grades.length > 0 && (
-          <div className="space-y-6">
-            {/* Stats Cards */}
-            <div className="grid gap-4 sm:grid-cols-2">
+        {courses.length === 0 && (
+          <Card>
+            <CardContent className="py-10 text-center">
+              <AlertCircle className="mx-auto mb-2" />
+              Chưa có dữ liệu
+            </CardContent>
+          </Card>
+        )}
+
+        {courses.length > 0 && (
+          <>
+            {/* GPA */}
+            <div className="grid md:grid-cols-3 gap-4">
               <Card className="gradient-primary text-primary-foreground">
-                <CardContent className="pt-6">
-                  <div className="text-center">
-                    <p className="text-sm opacity-80">GPA hệ 4</p>
-                    <p className="text-4xl font-bold">{gpa.toFixed(2)}</p>
-                  </div>
+                <CardContent className="pt-6 text-center">
+                  <p className="text-sm">GPA hệ 4</p>
+                  <p className="text-4xl font-bold">{gpa.toFixed(1)}</p>
                 </CardContent>
               </Card>
+
               <Card>
-                <CardContent className="pt-6">
-                  <div className="text-center">
-                    <p className="text-sm text-muted-foreground">Tổng tín chỉ</p>
-                    <p className="text-4xl font-bold text-foreground">{totalCredits}/128</p>
-                  </div>
+                <CardContent className="pt-6 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Tín chỉ bắt buộc
+                  </p>
+                  <p className="text-4xl font-bold">
+                    {requiredCredits}/104
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="pt-6 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Tín chỉ tự chọn (8 môn)
+                  </p>
+                  <p className="text-4xl font-bold">
+                    {optionalCredits}/24
+                  </p>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Grades - 2 Columns */}
             <Card>
               <CardHeader>
-                <CardTitle>Chi tiết điểm ({grades.length} môn)</CardTitle>
+                <CardTitle>Môn bắt buộc</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-0">
-                    {leftColumn.map((grade, index) => renderGradeItem(grade, index))}
-                  </div>
-                  {rightColumn.length > 0 && (
-                    <div className="space-y-0">
-                      {rightColumn.map((grade, index) => renderGradeItem(grade, index + midIndex))}
-                    </div>
-                  )}
-                </div>
+              <CardContent className="grid md:grid-cols-3 gap-3">
+                {requiredCourses.map(renderItem)}
               </CardContent>
             </Card>
-          </div>
-        )}
 
-        {grades.length === 0 && (
-          <Card>
-            <CardContent className="py-12">
-              <div className="text-center">
-                <AlertCircle className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                <p className="mt-4 text-muted-foreground">
-                  Chưa có dữ liệu điểm. Vui lòng nhập dữ liệu JSON và nhấn "Phân tích điểm"
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Môn tự chọn & tự do</CardTitle>
+                <CardDescription>
+                  Chỉ lấy 8 môn có điểm cao nhất
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="grid md:grid-cols-3 gap-3">
+                {optionalCourses.map(renderItem)}
+              </CardContent>
+            </Card>
+          </>
         )}
       </div>
     </Layout>
