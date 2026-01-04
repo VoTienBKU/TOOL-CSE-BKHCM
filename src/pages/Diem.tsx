@@ -9,9 +9,27 @@ import {
   GradeItem, 
   calculateGPA, 
   isGradedSubject, 
-  getGradeColor 
+  getGradeColor,
+  convertToGPA4
 } from "@/types/grade";
 import { BarChart3, Upload, Calculator, AlertCircle } from "lucide-react";
+
+// Lọc và xử lý trùng mã môn - lấy điểm cao nhất
+function processGrades(grades: GradeItem[]): GradeItem[] {
+  // Bỏ TC=0 và điểm không hợp lệ (DT, MT, KD...)
+  const filtered = grades.filter(g => g.soTinChi > 0 && isGradedSubject(g.diemChu));
+  
+  // Gộp theo mã môn, giữ điểm cao hơn
+  const gradeMap = new Map<string, GradeItem>();
+  filtered.forEach(grade => {
+    const existing = gradeMap.get(grade.maMonHoc);
+    if (!existing || convertToGPA4(grade.diemChu) > convertToGPA4(existing.diemChu)) {
+      gradeMap.set(grade.maMonHoc, grade);
+    }
+  });
+  
+  return Array.from(gradeMap.values());
+}
 
 const sampleData = `[
   {
@@ -39,10 +57,11 @@ export default function Diem() {
       if (!Array.isArray(parsed)) {
         throw new Error("Dữ liệu phải là một mảng");
       }
-      setGrades(parsed);
+      const processed = processGrades(parsed);
+      setGrades(processed);
       toast({
         title: "Thành công!",
-        description: `Đã tải ${parsed.length} môn học`,
+        description: `Đã tải ${processed.length} môn học (lọc từ ${parsed.length} bản ghi)`,
       });
     } catch (error) {
       toast({
