@@ -3,47 +3,34 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { 
   GradeItem, 
   calculateGPA, 
-  convertToGPA4, 
   isGradedSubject, 
   getGradeColor 
 } from "@/types/grade";
-import { BarChart3, Send, Upload, Calculator, AlertCircle } from "lucide-react";
+import { BarChart3, Upload, Calculator, AlertCircle } from "lucide-react";
 
 const sampleData = `[
   {
-    "sinhVienId": 197072,
-    "namHocHocKyId": 603,
-    "maHocKy": "BL",
-    "monHocId": 6646,
     "maMonHoc": "LA1003",
     "tenMonHoc": "Anh văn 1",
     "soTinChi": 2,
-    "diemChu": "DT",
-    "diemSo": 21,
-    "diemDat": "1",
-    "tinhTrangDiem": null,
-    "diemKhongIn": "0",
-    "nhomTo": "DT07",
-    "ghiChu": "AV NHU CAU 221",
-    "code": "0",
-    "msg": "done"
+    "diemChu": "B+"
+  },
+  {
+    "maMonHoc": "MT1003",
+    "tenMonHoc": "Giải tích 1",
+    "soTinChi": 4,
+    "diemChu": "A"
   }
 ]`;
 
 export default function Diem() {
   const [jsonInput, setJsonInput] = useState("");
   const [grades, setGrades] = useState<GradeItem[]>([]);
-  const [webhookUrl, setWebhookUrl] = useState("");
-  const [minGrade, setMinGrade] = useState("D");
-  const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
 
   const parseGrades = () => {
@@ -76,79 +63,25 @@ export default function Diem() {
     .filter((g) => isGradedSubject(g.diemChu))
     .reduce((sum, g) => sum + g.soTinChi, 0);
 
-  const gradeOrder = ["F", "D", "D+", "C", "C+", "B", "B+", "A", "A+"];
-  
-  const filteredGradesForDiscord = grades.filter((g) => {
-    if (!isGradedSubject(g.diemChu)) return false;
-    const gradeIndex = gradeOrder.indexOf(g.diemChu);
-    const minIndex = gradeOrder.indexOf(minGrade);
-    return gradeIndex >= minIndex;
-  });
+  // Chia thành 2 cột
+  const midIndex = Math.ceil(grades.length / 2);
+  const leftColumn = grades.slice(0, midIndex);
+  const rightColumn = grades.slice(midIndex);
 
-  const sendToDiscord = async () => {
-    if (!webhookUrl) {
-      toast({
-        title: "Thiếu Webhook URL",
-        description: "Vui lòng nhập Discord Webhook URL",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (filteredGradesForDiscord.length === 0) {
-      toast({
-        title: "Không có dữ liệu",
-        description: `Không có môn học nào đạt từ ${minGrade} trở lên`,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSending(true);
-
-    try {
-      const gradesList = filteredGradesForDiscord
-        .map((g) => `• **${g.tenMonHoc}** (${g.maMonHoc}): ${g.diemChu} - ${g.soTinChi} TC`)
-        .join("\n");
-
-      const message = {
-        embeds: [
-          {
-            title: "📊 Thông báo điểm BKHCM",
-            description: `**GPA hệ 4:** ${gpa.toFixed(2)}\n**Tổng tín chỉ:** ${totalCredits}\n\n**Danh sách môn từ ${minGrade} trở lên:**\n${gradesList}`,
-            color: 0x0066b3,
-            footer: {
-              text: "TOOL-CSE-BKHCM",
-            },
-            timestamp: new Date().toISOString(),
-          },
-        ],
-      };
-
-      const response = await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(message),
-      });
-
-      if (response.ok) {
-        toast({
-          title: "Đã gửi thành công!",
-          description: "Thông báo đã được gửi tới Discord",
-        });
-      } else {
-        throw new Error("Failed to send");
-      }
-    } catch (error) {
-      toast({
-        title: "Lỗi gửi tin nhắn",
-        description: "Vui lòng kiểm tra Webhook URL",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSending(false);
-    }
-  };
+  const renderGradeItem = (grade: GradeItem, index: number) => (
+    <div key={index} className="flex items-center justify-between py-2.5 border-b border-border/50 last:border-0">
+      <div className="flex-1 min-w-0 pr-2">
+        <p className="text-xs text-muted-foreground font-mono">{grade.maMonHoc}</p>
+        <p className="text-sm font-medium truncate">{grade.tenMonHoc}</p>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="text-xs text-muted-foreground">{grade.soTinChi} TC</span>
+        <Badge className={`${getGradeColor(grade.diemChu)} min-w-[42px] justify-center`} variant="outline">
+          {grade.diemChu}
+        </Badge>
+      </div>
+    </div>
+  );
 
   return (
     <Layout>
@@ -162,93 +95,43 @@ export default function Diem() {
             <h1 className="text-3xl font-bold text-foreground">Xem điểm & Tính GPA</h1>
           </div>
           <p className="text-muted-foreground">
-            Nhập dữ liệu điểm JSON, tính điểm trung bình hệ 4 và gửi thông báo qua Discord
+            Nhập dữ liệu điểm JSON và tính điểm trung bình hệ 4
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* Input Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Upload className="h-5 w-5" />
-                Nhập dữ liệu JSON
-              </CardTitle>
-              <CardDescription>
-                Dán dữ liệu điểm từ API vào đây
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Textarea
-                placeholder="Dán dữ liệu JSON điểm tại đây..."
-                className="min-h-[200px] font-mono text-sm"
-                value={jsonInput}
-                onChange={(e) => setJsonInput(e.target.value)}
-              />
-              <div className="flex gap-2">
-                <Button onClick={parseGrades} className="flex-1">
-                  <Calculator className="mr-2 h-4 w-4" />
-                  Phân tích điểm
-                </Button>
-                <Button variant="outline" onClick={loadSample}>
-                  Dữ liệu mẫu
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Discord Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Send className="h-5 w-5" />
-                Gửi thông báo Discord
-              </CardTitle>
-              <CardDescription>
-                Gửi kết quả điểm qua Discord Webhook
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="webhook">Discord Webhook URL</Label>
-                <Input
-                  id="webhook"
-                  placeholder="https://discord.com/api/webhooks/..."
-                  value={webhookUrl}
-                  onChange={(e) => setWebhookUrl(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="minGrade">Điểm tối thiểu gửi thông báo</Label>
-                <select
-                  id="minGrade"
-                  className="w-full rounded-md border border-input bg-background px-3 py-2"
-                  value={minGrade}
-                  onChange={(e) => setMinGrade(e.target.value)}
-                >
-                  {gradeOrder.map((g) => (
-                    <option key={g} value={g}>{g}</option>
-                  ))}
-                </select>
-                <p className="text-sm text-muted-foreground">
-                  Chỉ gửi các môn từ điểm {minGrade} trở lên ({filteredGradesForDiscord.length} môn)
-                </p>
-              </div>
-              <Button 
-                onClick={sendToDiscord} 
-                disabled={grades.length === 0 || isSending}
-                className="w-full"
-              >
-                <Send className="mr-2 h-4 w-4" />
-                {isSending ? "Đang gửi..." : "Gửi thông báo"}
+        {/* Input Section */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Upload className="h-5 w-5" />
+              Nhập dữ liệu JSON
+            </CardTitle>
+            <CardDescription>
+              Dán dữ liệu điểm từ API vào đây
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Textarea
+              placeholder="Dán dữ liệu JSON điểm tại đây..."
+              className="min-h-[150px] font-mono text-sm"
+              value={jsonInput}
+              onChange={(e) => setJsonInput(e.target.value)}
+            />
+            <div className="flex gap-2">
+              <Button onClick={parseGrades} className="flex-1">
+                <Calculator className="mr-2 h-4 w-4" />
+                Phân tích điểm
               </Button>
-            </CardContent>
-          </Card>
-        </div>
+              <Button variant="outline" onClick={loadSample}>
+                Dữ liệu mẫu
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Results Section */}
         {grades.length > 0 && (
-          <div className="mt-8 space-y-6">
+          <div className="space-y-6">
             {/* Stats Cards */}
             <div className="grid gap-4 sm:grid-cols-3">
               <Card className="gradient-primary text-primary-foreground">
@@ -277,47 +160,21 @@ export default function Diem() {
               </Card>
             </div>
 
-            {/* Grades Table */}
+            {/* Grades - 2 Columns */}
             <Card>
               <CardHeader>
                 <CardTitle>Chi tiết điểm ({grades.length} môn)</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="rounded-lg border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Mã môn</TableHead>
-                        <TableHead>Tên môn học</TableHead>
-                        <TableHead className="text-center">Tín chỉ</TableHead>
-                        <TableHead className="text-center">Điểm chữ</TableHead>
-                        <TableHead className="text-center">Điểm hệ 4</TableHead>
-                        <TableHead>Ghi chú</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {grades.map((grade, index) => (
-                        <TableRow key={index}>
-                          <TableCell className="font-mono text-sm">{grade.maMonHoc}</TableCell>
-                          <TableCell className="font-medium">{grade.tenMonHoc}</TableCell>
-                          <TableCell className="text-center">{grade.soTinChi}</TableCell>
-                          <TableCell className="text-center">
-                            <Badge className={getGradeColor(grade.diemChu)} variant="outline">
-                              {grade.diemChu}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-center">
-                            {isGradedSubject(grade.diemChu) 
-                              ? convertToGPA4(grade.diemChu).toFixed(1) 
-                              : "-"}
-                          </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">
-                            {grade.ghiChu || "-"}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-0">
+                    {leftColumn.map((grade, index) => renderGradeItem(grade, index))}
+                  </div>
+                  {rightColumn.length > 0 && (
+                    <div className="space-y-0">
+                      {rightColumn.map((grade, index) => renderGradeItem(grade, index + midIndex))}
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -325,7 +182,7 @@ export default function Diem() {
         )}
 
         {grades.length === 0 && (
-          <Card className="mt-8">
+          <Card>
             <CardContent className="py-12">
               <div className="text-center">
                 <AlertCircle className="mx-auto h-12 w-12 text-muted-foreground/50" />
