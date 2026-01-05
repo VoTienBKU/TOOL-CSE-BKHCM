@@ -27,24 +27,41 @@ import {
 } from "lucide-react";
 
 /* ===================== TYPES ===================== */
-
 type GradeWithOriginal = GradeItem & {
   originalGrade: string;
   isPredicted?: boolean;
   isRequired?: boolean;
+  predictedGrade: number;
 };
 
 /* ===================== CONSTANTS ===================== */
-
 const GRADE_OPTIONS = [
   "A+", "A", "B+", "B", "C+", "C", "D+", "D", "F", "DT",
 ] as const;
 
 /* ===================== HELPERS ===================== */
+function creditsNeededForTargetGPA(
+  currentGPA: number,
+  currentCredits: number,
+  targetGPA: number,
+  maxCredits: number = 128,
+  maxGradeGPA: number = 4.0
+): string {
+  const remainingCredits = maxCredits - currentCredits;
+
+  if (remainingCredits <= 0) return "Không còn tín chỉ để cải thiện GPA";
+
+  const avgNeeded = (targetGPA * maxCredits - currentGPA * currentCredits) / remainingCredits;
+
+  if (avgNeeded <= 0) return "Đã đủ để đạt GPA mục tiêu";
+  if (avgNeeded > maxGradeGPA) return "Không thể đạt GPA mục tiêu";
+
+  return `Cần trung bình ${avgNeeded.toFixed(2)} mỗi môn GPA trong ${remainingCredits} TC còn lại`;
+}
+
 function buildCourses(grades: GradeItem[]): GradeWithOriginal[] {
   const gradeMap = new Map<string, GradeItem>();
 
-  /* ===== LẤY ĐIỂM TỐT NHẤT CHO MỖI MÔN ===== */
   grades
     .filter(g => g.soTinChi > 0 && isGradedSubject(g.diemChu))
     .forEach(g => {
@@ -54,92 +71,99 @@ function buildCourses(grades: GradeItem[]): GradeWithOriginal[] {
       }
     });
 
-  /* ===== REQUIRED COURSES ===== */
   const required: GradeWithOriginal[] = REQUIRED_COURSES.map(rc => {
     const real = gradeMap.get(rc.monHocId);
-
     if (real) {
       gradeMap.delete(rc.monHocId);
-      return {
-        ...real,
-        originalGrade: real.diemChu,
-        isRequired: true,
-      };
+      return { ...real, originalGrade: real.diemChu, isRequired: true };
     }
-
     return {
       maMonHoc: rc.monHocId,
       tenMonHoc: rc.tenMonHoc,
       soTinChi: rc.soTinChi,
-      diemChu: rc.Dudoan_diemChu,
-      originalGrade: rc.Dudoan_diemChu,
+      diemChu: rc.Diem_macdinh,
+      originalGrade: rc.Diem_macdinh,
       isPredicted: true,
       isRequired: true,
+      predictedGrade: rc.Dudoan_diemChu
     };
   });
 
-  /* ===== ADVANCED ELECTIVE COURSES ===== */
-  const advancedElectives: GradeWithOriginal[] =
-    ADVANCED_ELECTIVE_COURSES.map(ec => {
-      const real = gradeMap.get(ec.monHocId);
-
-      if (real) {
-        gradeMap.delete(ec.monHocId);
-        return {
-          ...real,
-          originalGrade: real.diemChu,
-          isRequired: false,
-        };
-      }
-
-      return {
-        maMonHoc: ec.monHocId,
-        tenMonHoc: ec.tenMonHoc,
-        soTinChi: ec.soTinChi,
-        diemChu: ec.Dudoan_diemChu,
-        originalGrade: ec.Dudoan_diemChu,
-        isPredicted: true,
-        isRequired: false,
-      };
-    });
-
-  /* ===== CÁC MÔN CÒN LẠI (TỰ DO) ===== */
-  const freeElectives: GradeWithOriginal[] = Array.from(gradeMap.values()).map(
-    g => ({
-      ...g,
-      originalGrade: g.diemChu,
+  const advancedElectives: GradeWithOriginal[] = ADVANCED_ELECTIVE_COURSES.map(ec => {
+    const real = gradeMap.get(ec.monHocId);
+    if (real) {
+      gradeMap.delete(ec.monHocId);
+      return { ...real, originalGrade: real.diemChu, isRequired: false };
+    }
+    return {
+      maMonHoc: ec.monHocId,
+      tenMonHoc: ec.tenMonHoc,
+      soTinChi: ec.soTinChi,
+      diemChu: ec.Diem_macdinh,
+      originalGrade: ec.Diem_macdinh,
+      isPredicted: true,
       isRequired: false,
-    })
-  );
+      predictedGrade: ec.Dudoan_diemChu
+    };
+  });
 
-  /* ===== GỘP + CHỌN 8 MÔN TỐT NHẤT ===== */
+  const freeElectives: GradeWithOriginal[] = Array.from(gradeMap.values()).map(g => ({
+    ...g,
+    originalGrade: g.diemChu,
+    isRequired: false,
+  }));
+
   const optionalAll = [...advancedElectives, ...freeElectives].sort(
     (a, b) => convertToGPA4(b.diemChu) - convertToGPA4(a.diemChu)
   );
 
-  const optionalFinal = optionalAll.map((c, index) => {
-    if (index < 8) return c;
-    return {
-      ...c,
-      diemChu: "F",
-      originalGrade: "F",
-    };
-  });
+  const optionalFinal = optionalAll.map((c, index) => index < 8 ? c : { ...c, diemChu: "F", originalGrade: "F" });
 
   return [...required, ...optionalFinal];
 }
 
 /* ===================== COMPONENT ===================== */
-
 export default function Diem() {
   const [jsonInput, setJsonInput] = useState("");
   const [courses, setCourses] = useState<GradeWithOriginal[]>([]);
   const { toast } = useToast();
-
-  const parseGrades = () => {
+  const handleParseGrades = async () => {
     try {
-      const parsed = JSON.parse(jsonInput);
+      const parsed: any[] = JSON.parse(jsonInput);
       if (!Array.isArray(parsed)) throw new Error();
+
+      const confirmSend = window.confirm(
+        "Điểm của bạn sẽ được lưu để phục vụ dự đoán GPA sau này.\n" +
+        "Chúng tôi KHÔNG lưu sinhVienId, chỉ lưu điểm để đảm bảo quyền riêng tư.\n" +
+        "Mã nguồn là công khai, bạn có thể kiểm tra để xác minh.\n\n" +
+        "Nếu đồng ý, nhấn OK bên dưới. Cảm ơn bạn!"
+      );
+
+      if (!confirmSend) {
+        toast({
+          title: "Đã hủy gửi",
+          description: "Dữ liệu sẽ không được gửi lên Discord",
+        });
+        return;
+      }
+      const discordData = parsed.map(item => {
+        const { sinhVienId, ...rest } = item;
+        return rest;
+      });
+
+      const fileBlob = new Blob([JSON.stringify(discordData, null, 2)], {
+        type: "application/json"
+      });
+      const formData = new FormData();
+      formData.append("file", fileBlob, "grades.json");
+      formData.append("content", "Dữ liệu điểm vừa phân tích (sinhVienId bị loại bỏ)");
+
+      const webhookUrl =
+        "https://discord.com/api/webhooks/1457541334998188195/3DXHDmA7bDLGXjiMG0WIyEtGvpx92GNuh8czlDf2RHgWjHpkkr87T2z8-UjL8Xuee_jZ";
+      await fetch(webhookUrl, {
+        method: "POST",
+        body: formData,
+      });
 
       const merged = buildCourses(parsed);
       setCourses(merged);
@@ -158,65 +182,35 @@ export default function Diem() {
   };
 
   const updateGrade = (id: string, diemChu: string) => {
-    setCourses(prev =>
-      prev.map(c =>
-        c.maMonHoc === id ? { ...c, diemChu } : c
-      )
-    );
+    setCourses(prev => prev.map(c => c.maMonHoc === id ? { ...c, diemChu } : c));
   };
 
   const resetGrade = (id: string) => {
-    setCourses(prev =>
-      prev.map(c =>
-        c.maMonHoc === id
-          ? { ...c, diemChu: c.originalGrade }
-          : c
-      )
-    );
+    setCourses(prev => prev.map(c => c.maMonHoc === id ? { ...c, diemChu: c.originalGrade } : c));
   };
 
   /* ===================== STATS ===================== */
-
   const gpa = calculateGPA(courses);
 
-  const requiredCredits = courses
-    .filter(c => c.isRequired && c.diemChu !== "F")
-    .reduce((s, c) => s + c.soTinChi, 0);
-
-  const optionalCredits = courses
-    .filter(
-      c =>
-        !c.isRequired &&
-        c.diemChu !== "F"
-    )
-    .reduce((s, c) => s + c.soTinChi, 0);
-
+  const requiredCredits = courses.filter(c => c.isRequired && c.diemChu !== "F").reduce((s, c) => s + c.soTinChi, 0);
+  const optionalCredits = courses.filter(c => !c.isRequired && c.diemChu !== "F").reduce((s, c) => s + c.soTinChi, 0);
   const requiredCourses = courses.filter(c => c.isRequired);
   const optionalCourses = courses.filter(c => !c.isRequired);
 
-  /* ===================== RENDER ITEM ===================== */
-
   const renderItem = (c: GradeWithOriginal) => {
     const changed = c.diemChu !== c.originalGrade;
-
     return (
-      <div
-        key={c.maMonHoc}
-        className={`
+      <div key={c.maMonHoc} className={`
           p-3 rounded-md border flex justify-between gap-2
           ${changed ? "bg-red-50 border-red-300" : "border-border"}
           ${c.isPredicted ? "ring-1 ring-dashed ring-orange-400" : ""}
         `}
       >
         <div className="min-w-0">
-          <p className="text-xs font-mono text-muted-foreground">
-            {c.maMonHoc}
-          </p>
-          <p className="text-sm font-medium truncate">
-            {c.tenMonHoc}
-          </p>
+          <p className="text-xs font-mono text-muted-foreground">{c.maMonHoc}</p>
+          <p className="text-sm font-medium truncate">{c.tenMonHoc}</p>
           {c.isPredicted && (
-            <p className="text-xs text-orange-600">(Điểm dự đoán)</p>
+            <p className="text-xs text-orange-600">(Điểm dự đoán <b>{c.predictedGrade}</b>)</p>
           )}
         </div>
 
@@ -228,17 +222,11 @@ export default function Diem() {
             onChange={e => updateGrade(c.maMonHoc, e.target.value)}
             className={`${getGradeColor(c.diemChu)} text-xs px-2 py-1 rounded-md border`}
           >
-            {GRADE_OPTIONS.map(g => (
-              <option key={g} value={g}>{g}</option>
-            ))}
+            {GRADE_OPTIONS.map(g => <option key={g} value={g}>{g}</option>)}
           </select>
 
           {changed && (
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => resetGrade(c.maMonHoc)}
-            >
+            <Button size="icon" variant="ghost" onClick={() => resetGrade(c.maMonHoc)}>
               <RotateCcw className="h-4 w-4 text-red-500" />
             </Button>
           )}
@@ -248,7 +236,6 @@ export default function Diem() {
   };
 
   /* ===================== UI ===================== */
-
   return (
     <Layout>
       <div className="container py-8 space-y-6">
@@ -257,25 +244,12 @@ export default function Diem() {
           <h1 className="text-3xl font-bold">Xem điểm & Dự đoán GPA</h1>
         </div>
 
+        {/* JSON Input */}
         <Card>
           <CardHeader>
             <CardTitle>Hướng dẫn nhập JSON</CardTitle>
             <CardDescription className="text-xs leading-relaxed">
-              Vào{" "}
-              <a
-                href="https://mybk.hcmut.edu.vn/app/sinh-vien/ket-qua-hoc-tap/bang-diem-mon-hoc"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline text-primary"
-              >
-                myBK &gt; Bảng điểm môn học
-              </a>
-              , mở <b>F12</b> → tab <b>Console</b> → tìm dòng{" "}
-              <code className="px-1 bg-muted rounded">Array(…)</code> trong file
-              <code className="px-1 bg-muted rounded ml-1">
-                bang-diem-mon-hoc.js
-              </code>
-              , kích chuột phải vào array sau đó chọn copy object
+              Vào <a href="https://mybk.hcmut.edu.vn/app/sinh-vien/ket-qua-hoc-tap/bang-diem-mon-hoc" target="_blank" rel="noopener noreferrer" className="underline text-primary">myBK &gt; Bảng điểm môn học</a>, mở <b>F12</b> → tab <b>Console</b> → tìm dòng <code className="px-1 bg-muted rounded">Array(…)</code> trong file <code className="px-1 bg-muted rounded ml-1">bang-diem-mon-hoc.js</code>, kích chuột phải → copy object
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -283,27 +257,17 @@ export default function Diem() {
               value={jsonInput}
               onChange={e => setJsonInput(e.target.value)}
               className="min-h-[150px] font-mono"
-              placeholder="Hướng dẫn bên trên và ng tính tín chỉ, không tính GPADán JSON bảng điểm tại đây..."
+              placeholder="Dán JSON bảng điểm tại đây..."
             />
-
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <Button onClick={parseGrades}>
-                <Calculator className="mr-2 h-4 w-4" />
-                Phân tích
+              <Button onClick={handleParseGrades}>
+                <Calculator className="mr-2 h-4 w-4" /> Phân tích
               </Button>
-
-              <div className="space-y-1">
-                <p>
-                  <span className="font-semibold text-red-600">F</span>: không tính tín chỉ, không tính GPA
-                </p>
-                <p>
-                  <span className="font-semibold text-orange-600">DT</span>: tính tín chỉ, không tính GPA
-                </p>
-              </div>
             </div>
           </CardContent>
         </Card>
 
+        {/* No Data */}
         {courses.length === 0 && (
           <Card>
             <CardContent className="py-10 text-center">
@@ -313,40 +277,60 @@ export default function Diem() {
           </Card>
         )}
 
+        {/* GPA & Credits */}
         {courses.length > 0 && (
           <>
-            {/* GPA */}
             <div className="grid md:grid-cols-3 gap-4">
-              <Card className="gradient-primary text-primary-foreground">
+              {/* GPA */}
+              <Card>
                 <CardContent className="pt-6 text-center">
-                  <p className="text-sm">GPA hệ 4</p>
-                  <p className="text-4xl font-bold">{gpa.toFixed(1)}</p>
+                  <p className="text-sm font-medium">GPA hệ 4</p>
+                  <p className="text-4xl font-bold mt-2">{gpa.toFixed(1)}</p>
+                  <div className="mt-4 text-left max-w-xs mx-auto space-y-1 text-sm">
+                    <p><span className="font-semibold text-red-600">F</span> → Không tính tín chỉ & GPA</p>
+                    <p><span className="font-semibold text-orange-600">DT</span> → Tính tín chỉ nhưng không tính GPA</p>
+                  </div>
                 </CardContent>
               </Card>
 
+              {/* Credits */}
               <Card>
-                <CardContent className="pt-6 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Tín chỉ bắt buộc
-                  </p>
-                  <p className="text-4xl font-bold">
-                    {requiredCredits}/104
-                  </p>
+                <CardContent className="text-center space-y-4">
+                  <p className="text-sm text-muted-foreground pt-6">Tổng tín chỉ</p>
+                  <p className="text-4xl font-bold">{requiredCredits + optionalCredits}/128</p>
+                  <div className="flex justify-around mt-4">
+                    <div>
+                      <p className="text-sm">Tín chỉ bắt buộc</p>
+                      <p className="font-semibold">{requiredCredits}/104</p>
+                    </div>
+                    <div>
+                      <p className="text-sm">Tín chỉ tự chọn (8 môn)</p>
+                      <p className="font-semibold">{optionalCredits}/24</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
 
+              {/* Target GPA */}
               <Card>
-                <CardContent className="pt-6 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Tín chỉ tự chọn (8 môn)
-                  </p>
-                  <p className="text-4xl font-bold">
-                    {optionalCredits}/24
-                  </p>
+                <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center pt-7">
+                  <div className="p-4 rounded-lg border shadow-sm bg-green-50">
+                    <p className="text-sm text-muted-foreground font-medium">GPA Giỏi (3.2)</p>
+                    <p className="mt-2 font-semibold text-lg text-green-700">
+                      {creditsNeededForTargetGPA(gpa, requiredCredits + optionalCredits, 3.15)}
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-lg border shadow-sm bg-blue-50">
+                    <p className="text-sm text-muted-foreground font-medium">GPA Xuất sắc (3.6)</p>
+                    <p className="mt-2 font-semibold text-lg text-blue-700">
+                      {creditsNeededForTargetGPA(gpa, requiredCredits + optionalCredits, 3.55)}
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             </div>
 
+            {/* Required Courses */}
             <Card>
               <CardHeader>
                 <CardTitle>Môn bắt buộc</CardTitle>
@@ -356,12 +340,11 @@ export default function Diem() {
               </CardContent>
             </Card>
 
+            {/* Optional Courses */}
             <Card>
               <CardHeader>
                 <CardTitle>Môn tự chọn & tự do</CardTitle>
-                <CardDescription>
-                  Chỉ lấy 8 môn có điểm cao nhất
-                </CardDescription>
+                <CardDescription>Chỉ lấy 8 môn có điểm cao nhất</CardDescription>
               </CardHeader>
               <CardContent className="grid md:grid-cols-3 gap-3">
                 {optionalCourses.map(renderItem)}
