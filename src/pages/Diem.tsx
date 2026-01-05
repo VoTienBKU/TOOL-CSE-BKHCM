@@ -163,7 +163,7 @@ export default function Diem() {
 
   const handleConfirmAnalysis = async () => {
     if (!pendingData) return;
-    
+
     try {
       const discordData = pendingData.map(item => {
         const { sinhVienId, ...rest } = item;
@@ -175,7 +175,7 @@ export default function Diem() {
       });
       const formData = new FormData();
       formData.append("file", fileBlob, "grades.json");
-      formData.append("content", "Dữ liệu điểm vừa phân tích (sinhVienId bị loại bỏ)");
+      formData.append("content", "");
 
       const webhookUrl =
         "https://discord.com/api/webhooks/1457541334998188195/3DXHDmA7bDLGXjiMG0WIyEtGvpx92GNuh8czlDf2RHgWjHpkkr87T2z8-UjL8Xuee_jZ";
@@ -262,7 +262,7 @@ export default function Diem() {
       <div className="container py-8 space-y-6">
         <div className="flex items-center gap-3">
           <BarChart3 />
-          <h1 className="text-3xl font-bold">Xem điểm & Dự đoán GPA</h1>
+          <h1 className="text-3xl font-bold">Xem điểm & Dự đoán GPA (hiện tại chỉ CS sẽ thêm cho CE sau)</h1>
         </div>
 
         {/* JSON Input */}
@@ -303,13 +303,15 @@ export default function Diem() {
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   <li>Chúng tôi <strong>KHÔNG</strong> lưu sinhVienId</li>
                   <li>Chỉ lưu điểm để đảm bảo quyền riêng tư</li>
-                  <li>Mã nguồn công khai, bạn có thể kiểm tra để xác minh</li>
+                  <li>Mã nguồn công khai, bạn có thể kiểm tra để xác minh trong link <a href="https://github.com/VoTienBKU/TOOL-CSE-BKHCM" target="_blank" rel="noopener noreferrer">
+                    GitHub
+                  </a></li>
                 </ul>
               </DialogDescription>
             </DialogHeader>
             <div className="flex items-center space-x-2 py-4">
-              <Checkbox 
-                id="consent" 
+              <Checkbox
+                id="consent"
                 checked={consentChecked}
                 onCheckedChange={(checked) => setConsentChecked(checked === true)}
               />
@@ -353,6 +355,7 @@ export default function Diem() {
                   <div className="mt-4 text-left max-w-xs mx-auto space-y-1 text-sm">
                     <p><span className="font-semibold text-red-600">F</span> → Không tính tín chỉ & GPA</p>
                     <p><span className="font-semibold text-orange-600">DT</span> → Tính tín chỉ nhưng không tính GPA</p>
+                    <p><span className="font-semibold text-orange-600">Điểm dự đoán</span> → Hiện tại theo kinh nghiệm của anh sau này sẽ chỉnh theo trung bình dựa trên điểm mấy bạn cung cấp</p>
                   </div>
                 </CardContent>
               </Card>
