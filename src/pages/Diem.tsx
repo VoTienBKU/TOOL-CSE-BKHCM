@@ -681,7 +681,7 @@ export default function Diem() {
           >
             <video
               ref={videoRef}
-              src="/tutorial.mp4"
+              src="/TOOL-CSE-BKHCM/tutorial.mp4"
               autoPlay
               muted
               loop
