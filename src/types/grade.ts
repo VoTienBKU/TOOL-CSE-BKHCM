@@ -169,3 +169,99 @@ export const ADVANCED_ELECTIVE_COURSES = [
   { monHocId: "CO4037", tenMonHoc: "Hệ thống thông tin quản lý", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "DT" },
   { monHocId: "CO4039", tenMonHoc: "Bảo mật sinh trắc", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "DT" },
 ];
+
+export const REQUIRED_COURSES_CE = [
+  // A. Toán và Khoa học Tự nhiên (Mathematics and Basic Sciences)
+  { monHocId: "MT1003", tenMonHoc: "Giải tích 1", soTinChi: 4, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "MT1005", tenMonHoc: "Giải tích 2", soTinChi: 4, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "MT1007", tenMonHoc: "Đại số Tuyến tính", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "MT2013", tenMonHoc: "Xác suất và Thống kê", soTinChi: 4, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "CH1003", tenMonHoc: "Hóa đại cương", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "PH1003", tenMonHoc: "Vật lý 1", soTinChi: 4, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "PH1007", tenMonHoc: "Thí nghiệm Vật lý", soTinChi: 1, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+
+  // A (cont.) Discrete & Modeling
+  { monHocId: "CO1007", tenMonHoc: "Cấu trúc Rời rạc cho Khoa học Máy tính", soTinChi: 4, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO2011", tenMonHoc: "Mô hình hóa Toán học", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+
+  // B. Giáo dục chung (General education) - Socials & Economics
+  { monHocId: "SP1007", tenMonHoc: "Pháp luật Việt Nam Đại cương", soTinChi: 2, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "SP1031", tenMonHoc: "Triết học Mác - Lênin", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "SP1033", tenMonHoc: "Kinh tế Chính trị Mác - Lênin", soTinChi: 2, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "SP1035", tenMonHoc: "Chủ nghĩa Xã hội Khoa học", soTinChi: 2, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "SP1037", tenMonHoc: "Tư tưởng Hồ Chí Minh", soTinChi: 2, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "SP1039", tenMonHoc: "Lịch sử Đảng Cộng sản Việt Nam", soTinChi: 2, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+
+  // B.2. Other general education / Introduction / Professional skills / Management
+  { monHocId: "CO1005", tenMonHoc: "Nhập môn Điện toán", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "CO2001", tenMonHoc: "Kỹ năng Chuyên nghiệp cho Kỹ sư", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "IM1023", tenMonHoc: "Quản lý Sản xuất cho Kỹ sư", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "IM1025", tenMonHoc: "Quản lý Dự án cho Kỹ sư", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "IM1031", tenMonHoc: "Khởi nghiệp và đổi mới sáng tạo", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "ME1019", tenMonHoc: "Quản lý năng suất và chất lượng", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+
+  // B.3. Ngoại ngữ
+  { monHocId: "LA1003", tenMonHoc: "Anh văn 1", soTinChi: 2, Diem_macdinh: "DT", Dudoan_diemChu: "DT" },
+  { monHocId: "LA1005", tenMonHoc: "Anh văn 2", soTinChi: 2, Diem_macdinh: "DT", Dudoan_diemChu: "DT" },
+  { monHocId: "LA1007", tenMonHoc: "Anh văn 3", soTinChi: 2, Diem_macdinh: "DT", Dudoan_diemChu: "DT" },
+  { monHocId: "LA1009", tenMonHoc: "Anh văn 4", soTinChi: 2, Diem_macdinh: "DT", Dudoan_diemChu: "DT" },
+
+  // C. Cơ sở ngành (Core Courses)
+  { monHocId: "CO1023", tenMonHoc: "Hệ thống số", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO1025", tenMonHoc: "Thiết kế Luận lý Với HDL", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO1027", tenMonHoc: "Kỹ thuật Lập trình", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "CO2003", tenMonHoc: "Cấu trúc Dữ liệu và Giải Thuật", soTinChi: 4, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "CO2007", tenMonHoc: "Kiến trúc Máy tính", soTinChi: 4, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO2103", tenMonHoc: "Mạch điện - điện tử", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+
+  // D. Ngành (Compulsory Major Subjects)
+  { monHocId: "CO2017", tenMonHoc: "Hệ điều hành", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3001", tenMonHoc: "Công nghệ Phần mềm", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3009", tenMonHoc: "Vi xử lý - Vi điều khiển", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3053", tenMonHoc: "Hệ thống nhúng", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3093", tenMonHoc: "Mạng máy tính", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3097", tenMonHoc: "Thiết kế Vi mạch (LSI Logic Design)", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3117", tenMonHoc: "Học máy", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  
+  // E. Tự chọn ngành (Elective Major Courses) - small credit projects
+  { monHocId: "CO3107", tenMonHoc: "Thực tập Đồ án môn học Đa ngành - Hướng Trí tuệ Nhân tạo", soTinChi: 1, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "CO3109", tenMonHoc: "Thực tập Đồ án môn học Đa ngành - Hướng Công nghệ Phần mềm", soTinChi: 1, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "CO3111", tenMonHoc: "Thực tập Đồ án môn học Đa ngành - Hướng Hệ thống Thông tin", soTinChi: 1, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "CO3119", tenMonHoc: "Đồ án Mạng máy tính", soTinChi: 1, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+
+  // H. Học phần tốt nghiệp (Graduation module courses)
+  { monHocId: "CO3345", tenMonHoc: "Thực tập Ngoài trường", soTinChi: 2, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "CO4041", tenMonHoc: "Đồ án môn học Kỹ thuật Máy tính", soTinChi: 2, Diem_macdinh: "F", Dudoan_diemChu: "A" },
+  { monHocId: "CO4347", tenMonHoc: "Đồ án Tốt nghiệp (Kỹ thuật Máy tính) - Capstone Project", soTinChi: 4, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+];
+
+export const ADVANCED_ELECTIVE_COURSES_CE = [
+  // F.1. Chuyên ngành Internet vạn vật (IoT)
+  { monHocId: "CO3141", tenMonHoc: "Điện toán đám mây", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3037", tenMonHoc: "Phát triển Ứng dụng Internet of Things", soTinChi: 3, Diem_macinh: "F", Dudoan_diemChu: "B" /* note: key name typo preserved? */ },
+  { monHocId: "CO3049", tenMonHoc: "Lập trình Web", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3069", tenMonHoc: "Mật mã và An ninh mạng", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3051", tenMonHoc: "Hệ thống thiết bị di động", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+
+  // F.2. Chuyên ngành Hệ thống tính toán nâng cao (Advanced Computing Systems)
+  { monHocId: "CO2035", tenMonHoc: "Xử lý Tín hiệu số", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3035", tenMonHoc: "Hệ thời gian thực", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3067", tenMonHoc: "Tính toán Song song", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3071", tenMonHoc: "Hệ phân bố", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3007", tenMonHoc: "Đánh giá Hiệu năng Hệ thống", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3021", tenMonHoc: "Hệ Quản trị Cơ sở Dữ Liệu", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+
+  // F.3. Chuyên ngành Thiết kế vi mạch số (Digital VLSI Design)
+  { monHocId: "CO3143", tenMonHoc: "Giới thiệu hệ thống trên chip (Introduction to System on Chip)", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3145", tenMonHoc: "Thiết kế luận lý với HDL nâng cao", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3147", tenMonHoc: "Thiết kế vi mạch nâng cao (Advanced VLSI design)", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3149", tenMonHoc: "Tổng hợp luận lý vi mạch (Logic Synthesis)", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+
+  // F.4. Chuyên ngành Kỹ thuật máy tính (Computer Engineering) - many listed (kept as electives pool)
+  { monHocId: "CO3037", tenMonHoc: "Phát triển Ứng dụng Internet of Things", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3049", tenMonHoc: "Lập trình Web", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3051", tenMonHoc: "Hệ thống thiết bị di động", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3067", tenMonHoc: "Tính toán Song song", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3069", tenMonHoc: "Mật mã và An ninh mạng", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+  { monHocId: "CO3071", tenMonHoc: "Hệ phân bố", soTinChi: 3, Diem_macdinh: "F", Dudoan_diemChu: "B" },
+];

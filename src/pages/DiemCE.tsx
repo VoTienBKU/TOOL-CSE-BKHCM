@@ -25,8 +25,8 @@ import {
   isGradedSubject,
   getGradeColor,
   convertToGPA4,
-  REQUIRED_COURSES,
-  ADVANCED_ELECTIVE_COURSES
+  REQUIRED_COURSES_CE as REQUIRED_COURSES,
+  ADVANCED_ELECTIVE_COURSES_CE as ADVANCED_ELECTIVE_COURSES,
 } from "@/types/grade";
 import {
   BarChart3,
@@ -194,7 +194,7 @@ function buildCourses(grades: GradeItem[]): GradeWithOriginal[] {
 }
 
 /* ===================== COMPONENT ===================== */
-export default function Diem() {
+export default function DiemCE() {
   const [jsonInput, setJsonInput] = useState("");
   const [courses, setCourses] = useState<GradeWithOriginal[]>([]);
   const [showConsentDialog, setShowConsentDialog] = useState(false);

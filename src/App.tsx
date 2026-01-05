@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Diem from "./pages/Diem";
 import DoAn from "./pages/DoAn";
 import NotFound from "./pages/NotFound";
+import DiemCE from "./pages/DiemCE";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/diem" element={<Diem />} />
+          <Route path="/diem_ce" element={<DiemCE />} />
           <Route path="/do-an" element={<DoAn />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

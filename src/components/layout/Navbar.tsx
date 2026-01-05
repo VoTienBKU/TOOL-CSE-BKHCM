@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { to: "/", label: "Trang chủ", icon: Home },
-  { to: "/diem", label: "Xem điểm", icon: BarChart3 },
+  { to: "/diem", label: "Xem điểm CS", icon: BarChart3 },
+  { to: "/diem_ce", label: "Xem điểm CE", icon: BarChart3 },
   { to: "/do-an", label: "Đồ án năm 4", icon: FolderKanban },
 ];
 

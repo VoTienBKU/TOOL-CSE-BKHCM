@@ -7,9 +7,16 @@ import { BarChart3, FolderKanban, Bell, GraduationCap, BookOpen, Users } from "l
 const features = [
   {
     icon: BarChart3,
-    title: "Xem điểm & Tính GPA",
+    title: "Xem điểm & Tính GPA CS",
     description: "Nhập dữ liệu điểm JSON, tính điểm trung bình hệ 4 và xem chi tiết từng môn học",
     link: "/diem",
+    color: "text-primary",
+  },
+  {
+    icon: BarChart3,
+    title: "Xem điểm & Tính GPA CE",
+    description: "Nhập dữ liệu điểm JSON, tính điểm trung bình hệ 4 và xem chi tiết từng môn học",
+    link: "/diem_ce",
     color: "text-primary",
   },
   {
