@@ -48,7 +48,7 @@ function isCountedForGPA(diemChu: string): boolean {
   return ["A+", "A", "B+", "B", "C+", "C", "D+", "D"].includes(diemChu);
 }
 
-export function calculateGPA(grades: GradeItem[]): number {
+export function calculateGPA(grades: { soTinChi: number; diemChu: string }[]): number {
   let totalPoints = 0;
   let totalCredits = 0;
 
