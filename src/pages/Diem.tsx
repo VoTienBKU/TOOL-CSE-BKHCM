@@ -34,6 +34,7 @@ import {
   AlertCircle,
   RotateCcw,
   ShieldCheck,
+  FileText,
 } from "lucide-react";
 
 /* ===================== TYPES ===================== */
@@ -281,9 +282,55 @@ export default function Diem() {
               placeholder="Dán JSON bảng điểm tại đây..."
             />
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <Button onClick={handleParseClick}>
-                <Calculator className="mr-2 h-4 w-4" /> Phân tích
-              </Button>
+              <div className="flex gap-2">
+                <Button onClick={handleParseClick}>
+                  <Calculator className="mr-2 h-4 w-4" /> Phân tích
+                </Button>
+                <Button variant="outline" onClick={() => {
+                  const sampleData = [
+                    {
+                      sinhVienId: 212900,
+                      namHocHocKyId: 645,
+                      maHocKy: "20231",
+                      monHocId: 6650,
+                      maMonHoc: "MT1003",
+                      tenMonHoc: "Giải tích 1",
+                      soTinChi: 4,
+                      diemChu: "B+",
+                      diemSo: 8.0,
+                      diemDat: "1",
+                      tinhTrangDiem: "Chính thức",
+                      diemKhongIn: "0",
+                      nhomTo: "L19",
+                      ghiChu: null,
+                      code: "0",
+                      msg: "done"
+                    },
+                    {
+                      sinhVienId: 212900,
+                      namHocHocKyId: 645,
+                      maHocKy: "20231",
+                      monHocId: 6631,
+                      maMonHoc: "CO1005",
+                      tenMonHoc: "Nhập môn Điện toán",
+                      soTinChi: 3,
+                      diemChu: "A",
+                      diemSo: 8.7,
+                      diemDat: "1",
+                      tinhTrangDiem: "Chính thức",
+                      diemKhongIn: "0",
+                      nhomTo: "L01",
+                      ghiChu: null,
+                      code: "0",
+                      msg: "done"
+                    }
+                  ];
+                  setJsonInput(JSON.stringify(sampleData, null, 2));
+                  toast({ title: "Đã tải dữ liệu mẫu", description: "Nhấn Phân tích để xem kết quả (không gửi Discord)" });
+                }}>
+                  <FileText className="mr-2 h-4 w-4" /> Dữ liệu mẫu
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
