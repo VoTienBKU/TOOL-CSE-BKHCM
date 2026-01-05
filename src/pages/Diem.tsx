@@ -146,6 +146,16 @@ export default function Diem() {
   const [pendingData, setPendingData] = useState<any[] | null>(null);
   const { toast } = useToast();
 
+  // Parse directly without Discord (for sample data)
+  const parseDirectly = (data: any[]) => {
+    const merged = buildCourses(data);
+    setCourses(merged);
+    toast({
+      title: "Thành công",
+      description: `Đã xử lý ${merged.length} môn (dữ liệu mẫu)`,
+    });
+  };
+
   const handleParseClick = () => {
     try {
       const parsed: any[] = JSON.parse(jsonInput);
@@ -326,7 +336,7 @@ export default function Diem() {
                     }
                   ];
                   setJsonInput(JSON.stringify(sampleData, null, 2));
-                  toast({ title: "Đã tải dữ liệu mẫu", description: "Nhấn Phân tích để xem kết quả (không gửi Discord)" });
+                  parseDirectly(sampleData);
                 }}>
                   <FileText className="mr-2 h-4 w-4" /> Dữ liệu mẫu
                 </Button>
