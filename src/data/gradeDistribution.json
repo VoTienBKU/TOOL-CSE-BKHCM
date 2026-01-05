@@ -1,9 +1,685 @@
 [
   {
-    "monHocId": "CO3011",
+    "monHocId": "CO1007",
+    "tenMonHoc": "Cấu trúc Rời rạc cho Khoa học Máy tính",
+    "phanBoDiem": {
+      "A+": 2,
+      "A": 9,
+      "B+": 18,
+      "B": 47,
+      "C+": 27,
+      "C": 57,
+      "D+": 11,
+      "D": 15,
+      "F": 6
+    }
+  },
+  {
+    "monHocId": "CO2011",
+    "tenMonHoc": "Mô hình hóa Toán học",
     "phanBoDiem": {
       "A+": 1,
+      "A": 10,
+      "B+": 12,
+      "B": 38,
+      "C+": 14,
+      "C": 31,
+      "D+": 5,
+      "D": 3,
+      "F": 1
+    }
+  },
+  {
+    "monHocId": "MT1003",
+    "tenMonHoc": "Giải tích 1",
+    "phanBoDiem": {
+      "A+": 25,
+      "A": 59,
+      "B+": 30,
+      "B": 55,
+      "C+": 13,
+      "C": 17,
+      "D+": 6,
+      "D": 1,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "MT1005",
+    "tenMonHoc": "Giải tích 2",
+    "phanBoDiem": {
+      "A+": 24,
+      "A": 50,
+      "B+": 20,
+      "B": 47,
+      "C+": 24,
+      "C": 21,
+      "D+": 10,
+      "D": 9,
+      "F": 2
+    }
+  },
+  {
+    "monHocId": "MT1007",
+    "tenMonHoc": "Đại số Tuyến tính",
+    "phanBoDiem": {
+      "A+": 22,
+      "A": 42,
+      "B+": 24,
+      "B": 52,
+      "C+": 22,
+      "C": 27,
+      "D+": 6,
+      "D": 11,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "MT2013",
+    "tenMonHoc": "Xác suất và Thống kê",
+    "phanBoDiem": {
+      "A+": 35,
+      "A": 42,
+      "B+": 18,
+      "B": 20,
+      "C+": 8,
+      "C": 10,
+      "D+": 10,
+      "D": 4,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CH1003",
+    "tenMonHoc": "Hóa đại cương",
+    "phanBoDiem": {
+      "A+": 18,
+      "A": 49,
+      "B+": 29,
+      "B": 37,
+      "C+": 16,
+      "C": 17,
+      "D+": 5,
+      "D": 0,
+      "F": 1
+    }
+  },
+  {
+    "monHocId": "PH1003",
+    "tenMonHoc": "Vật lý 1",
+    "phanBoDiem": {
+      "A+": 7,
+      "A": 28,
+      "B+": 20,
+      "B": 54,
+      "C+": 27,
+      "C": 42,
+      "D+": 17,
+      "D": 11,
+      "F": 1
+    }
+  },
+  {
+    "monHocId": "PH1007",
+    "tenMonHoc": "Thí nghiệm Vật lý",
+    "phanBoDiem": {
+      "A+": 42,
+      "A": 51,
+      "B+": 27,
+      "B": 47,
+      "C+": 14,
+      "C": 15,
+      "D+": 4,
+      "D": 5,
+      "F": 1
+    }
+  },
+  {
+    "monHocId": "SP1007",
+    "tenMonHoc": "Pháp luật Việt Nam Đại cương",
+    "phanBoDiem": {
+      "A+": 2,
+      "A": 20,
+      "B+": 17,
+      "B": 52,
+      "C+": 21,
+      "C": 13,
+      "D+": 3,
+      "D": 1,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "SP1031",
+    "tenMonHoc": "Triết học Mác - Lênin",
+    "phanBoDiem": {
+      "A+": 1,
+      "A": 37,
+      "B+": 44,
+      "B": 77,
+      "C+": 28,
+      "C": 18,
+      "D+": 0,
+      "D": 0,
+      "F": 1
+    }
+  },
+  {
+    "monHocId": "SP1033",
+    "tenMonHoc": "Kinh tế Chính trị Mác - Lênin",
+    "phanBoDiem": {
+      "A+": 3,
+      "A": 22,
+      "B+": 25,
+      "B": 60,
+      "C+": 22,
+      "C": 13,
+      "D+": 1,
+      "D": 0,
+      "F": 1
+    }
+  },
+  {
+    "monHocId": "SP1035",
+    "tenMonHoc": "Chủ nghĩa Xã hội Khoa học",
+    "phanBoDiem": {
+      "A+": 1,
+      "A": 16,
+      "B+": 21,
+      "B": 42,
+      "C+": 11,
+      "C": 4,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "SP1037",
+    "tenMonHoc": "Tư tưởng Hồ Chí Minh",
+    "phanBoDiem": {
+      "A+": 1,
+      "A": 9,
+      "B+": 6,
+      "B": 13,
+      "C+": 7,
+      "C": 8,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "SP1039",
+    "tenMonHoc": "Lịch sử Đảng Cộng sản Việt Nam",
+    "phanBoDiem": {
+      "A+": 0,
+      "A": 10,
+      "B+": 8,
+      "B": 34,
+      "C+": 12,
+      "C": 26,
+      "D+": 1,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "LA1003",
+    "tenMonHoc": "Anh văn 1",
+    "phanBoDiem": {
+      "A+": 1,
+      "A": 12,
+      "B+": 9,
+      "B": 12,
+      "C+": 0,
+      "C": 5,
+      "D+": 1,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "LA1005",
+    "tenMonHoc": "Anh văn 2",
+    "phanBoDiem": {
+      "A+": 1,
+      "A": 7,
+      "B+": 9,
+      "B": 13,
+      "C+": 2,
+      "C": 3,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "LA1007",
+    "tenMonHoc": "Anh văn 3",
+    "phanBoDiem": {
+      "A+": 0,
+      "A": 1,
+      "B+": 4,
+      "B": 13,
+      "C+": 3,
+      "C": 5,
+      "D+": 1,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "LA1009",
+    "tenMonHoc": "Anh văn 4",
+    "phanBoDiem": {
+      "A+": 0,
+      "A": 3,
+      "B+": 6,
+      "B": 9,
+      "C+": 2,
+      "C": 1,
+      "D+": 1,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO1005",
+    "tenMonHoc": "Nhập môn Điện toán",
+    "phanBoDiem": {
+      "A+": 9,
+      "A": 77,
+      "B+": 43,
+      "B": 59,
+      "C+": 5,
+      "C": 4,
+      "D+": 1,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "IM1013",
+    "tenMonHoc": "Kinh tế học Đại cương",
+    "phanBoDiem": {
+      "A+": 1,
+      "A": 0,
+      "B+": 0,
+      "B": 4,
+      "C+": 3,
+      "C": 0,
+      "D+": 0,
+      "D": 1,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "IM1023",
+    "tenMonHoc": "Quản lý Sản xuất cho Kỹ sư",
+    "phanBoDiem": {
+      "A+": 2,
+      "A": 2,
+      "B+": 2,
+      "B": 4,
+      "C+": 1,
+      "C": 1,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "IM1025",
+    "tenMonHoc": "Quản lý Dự án cho Kỹ sư",
+    "phanBoDiem": {
+      "A+": 1,
+      "A": 28,
+      "B+": 19,
+      "B": 10,
+      "C+": 4,
+      "C": 4,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "IM1027",
+    "tenMonHoc": "Kinh tế Kỹ thuật",
+    "phanBoDiem": {
+      "A+": 1,
+      "A": 1,
+      "B+": 0,
+      "B": 1,
+      "C+": 1,
+      "C": 0,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "IM3001",
+    "tenMonHoc": "Quản trị Kinh doanh cho Kỹ sư",
+    "phanBoDiem": {
+      "A+": 0,
+      "A": 1,
+      "B+": 0,
+      "B": 0,
+      "C+": 0,
+      "C": 1,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO2001",
+    "tenMonHoc": "Kỹ năng Chuyên nghiệp cho Kỹ sư",
+    "phanBoDiem": {
+      "A+": 27,
+      "A": 61,
+      "B+": 12,
+      "B": 2,
+      "C+": 0,
+      "C": 0,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO1023",
+    "tenMonHoc": "Hệ thống số",
+    "phanBoDiem": {
+      "A+": 7,
+      "A": 29,
+      "B+": 18,
+      "B": 60,
+      "C+": 30,
+      "C": 44,
+      "D+": 5,
+      "D": 4,
+      "F": 1
+    }
+  },
+  {
+    "monHocId": "CO1027",
+    "tenMonHoc": "Kỹ thuật Lập trình",
+    "phanBoDiem": {
+      "A+": 11,
+      "A": 53,
+      "B+": 26,
+      "B": 56,
+      "C+": 9,
+      "C": 29,
+      "D+": 8,
+      "D": 4,
+      "F": 2
+    }
+  },
+  {
+    "monHocId": "CO2003",
+    "tenMonHoc": "Cấu trúc Dữ liệu và Giải Thuật",
+    "phanBoDiem": {
+      "A+": 16,
+      "A": 39,
+      "B+": 29,
+      "B": 39,
+      "C+": 12,
+      "C": 24,
+      "D+": 8,
+      "D": 10,
+      "F": 3
+    }
+  },
+  {
+    "monHocId": "CO2007",
+    "tenMonHoc": "Kiến trúc Máy tính",
+    "phanBoDiem": {
+      "A+": 6,
+      "A": 21,
+      "B+": 19,
+      "B": 53,
+      "C+": 23,
+      "C": 22,
+      "D+": 8,
+      "D": 7,
+      "F": 5
+    }
+  },
+  {
+    "monHocId": "CO2013",
+    "tenMonHoc": "Hệ cơ sở Dữ liệu",
+    "phanBoDiem": {
+      "A+": 0,
+      "A": 8,
+      "B+": 11,
+      "B": 28,
+      "C+": 7,
+      "C": 12,
+      "D+": 2,
+      "D": 0,
+      "F": 1
+    }
+  },
+  {
+    "monHocId": "CO2039",
+    "tenMonHoc": "Lập trình Nâng cao",
+    "phanBoDiem": {
+      "A+": 11,
+      "A": 45,
+      "B+": 15,
+      "B": 22,
+      "C+": 7,
+      "C": 3,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO2017",
+    "tenMonHoc": "Hệ điều hành",
+    "phanBoDiem": {
+      "A+": 2,
+      "A": 22,
+      "B+": 13,
+      "B": 39,
+      "C+": 17,
+      "C": 17,
+      "D+": 4,
+      "D": 1,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO3001",
+    "tenMonHoc": "Công nghệ Phần mềm",
+    "phanBoDiem": {
+      "A+": 3,
+      "A": 38,
+      "B+": 15,
+      "B": 11,
+      "C+": 1,
+      "C": 2,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO3005",
+    "tenMonHoc": "Nguyên lý Ngôn ngữ Lập trình",
+    "phanBoDiem": {
+      "A+": 0,
+      "A": 4,
+      "B+": 4,
+      "B": 10,
+      "C+": 1,
+      "C": 13,
+      "D+": 6,
+      "D": 10,
+      "F": 5
+    }
+  },
+  {
+    "monHocId": "CO3093",
+    "tenMonHoc": "Mạng máy tính",
+    "phanBoDiem": {
+      "A+": 2,
+      "A": 9,
+      "B+": 12,
+      "B": 23,
+      "C+": 8,
+      "C": 12,
+      "D+": 1,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO3101",
+    "tenMonHoc": "Đồ án Tổng hợp - Hướng Trí tuệ Nhân tạo",
+    "phanBoDiem": {
+      "A+": 5,
+      "A": 5,
+      "B+": 0,
+      "B": 3,
+      "C+": 0,
+      "C": 0,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO3103",
+    "tenMonHoc": "Đồ án Tổng hợp - Hướng Công nghệ Phần mềm",
+    "phanBoDiem": {
+      "A+": 20,
+      "A": 16,
+      "B+": 3,
+      "B": 0,
+      "C+": 1,
+      "C": 0,
+      "D+": 0,
+      "D": 0,
+      "F": 1
+    }
+  },
+  {
+    "monHocId": "CO3105",
+    "tenMonHoc": "Đồ án Tổng hợp - Hướng Hệ thống Thông tin",
+    "phanBoDiem": {
+      "A+": 0,
+      "A": 0,
+      "B+": 0,
+      "B": 0,
+      "C+": 0,
+      "C": 1,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO3127",
+    "tenMonHoc": "Đồ án tổng hợp - Hướng kỹ thuật dữ liệu",
+    "phanBoDiem": {
+      "A+": 3,
+      "A": 4,
+      "B+": 0,
+      "B": 0,
+      "C+": 0,
+      "C": 0,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO3107",
+    "tenMonHoc": "Thực tập Đồ án môn học Đa ngành - Hướng Trí tuệ Nhân tạo",
+    "phanBoDiem": {
+      "A+": 11,
+      "A": 7,
+      "B+": 0,
+      "B": 1,
+      "C+": 0,
+      "C": 0,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO3109",
+    "tenMonHoc": "Thực tập Đồ án môn học Đa ngành - Hướng Công nghệ Phần mềm",
+    "phanBoDiem": {
+      "A+": 28,
       "A": 11,
+      "B+": 3,
+      "B": 1,
+      "C+": 0,
+      "C": 0,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO3111",
+    "tenMonHoc": "Thực tập Đồ án môn học Đa ngành - Hướng Hệ thống Thông tin",
+    "phanBoDiem": {
+      "A+": 1,
+      "A": 1,
+      "B+": 0,
+      "B": 0,
+      "C+": 0,
+      "C": 0,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO3335",
+    "tenMonHoc": "Thực tập Ngoài trường",
+    "phanBoDiem": {
+      "A+": 31,
+      "A": 18,
+      "B+": 1,
+      "B": 2,
+      "C+": 0,
+      "C": 0,
+      "D+": 0,
+      "D": 0,
+      "F": 4
+    }
+  },
+  {
+    "monHocId": "CO4029",
+    "tenMonHoc": "Đồ án Chuyên ngành",
+    "phanBoDiem": {
+      "A+": 1,
+      "A": 1,
+      "B+": 0,
+      "B": 0,
+      "C+": 0,
+      "C": 0,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO3011",
+    "tenMonHoc": "Quản lý Dự án Phần mềm",
+    "phanBoDiem": {
+      "A+": 2,
+      "A": 13,
       "B+": 2,
       "B": 0,
       "C+": 0,
@@ -15,12 +691,13 @@
   },
   {
     "monHocId": "CO3015",
+    "tenMonHoc": "Kiểm tra Phần mềm",
     "phanBoDiem": {
       "A+": 0,
-      "A": 6,
-      "B+": 0,
-      "B": 3,
-      "C+": 1,
+      "A": 7,
+      "B+": 4,
+      "B": 8,
+      "C+": 2,
       "C": 1,
       "D+": 0,
       "D": 0,
@@ -29,12 +706,28 @@
   },
   {
     "monHocId": "CO3017",
+    "tenMonHoc": "Kiến trúc Phần mềm",
     "phanBoDiem": {
       "A+": 1,
       "A": 3,
       "B+": 1,
       "B": 3,
-      "C+": 0,
+      "C+": 1,
+      "C": 0,
+      "D+": 0,
+      "D": 1,
+      "F": 0
+    }
+  },
+  {
+    "monHocId": "CO3021",
+    "tenMonHoc": "Hệ Quản trị Cơ sở Dữ Liệu",
+    "phanBoDiem": {
+      "A+": 1,
+      "A": 0,
+      "B+": 0,
+      "B": 0,
+      "C+": 2,
       "C": 0,
       "D+": 0,
       "D": 0,
@@ -43,11 +736,12 @@
   },
   {
     "monHocId": "CO3027",
+    "tenMonHoc": "Thương mại Điện tử",
     "phanBoDiem": {
       "A+": 0,
       "A": 1,
       "B+": 4,
-      "B": 1,
+      "B": 4,
       "C+": 0,
       "C": 0,
       "D+": 0,
@@ -57,11 +751,12 @@
   },
   {
     "monHocId": "CO3029",
+    "tenMonHoc": "Khai phá Dữ liệu",
     "phanBoDiem": {
-      "A+": 3,
-      "A": 1,
+      "A+": 5,
+      "A": 2,
       "B+": 0,
-      "B": 1,
+      "B": 2,
       "C+": 0,
       "C": 0,
       "D+": 0,
@@ -71,6 +766,7 @@
   },
   {
     "monHocId": "CO3037",
+    "tenMonHoc": "Phát triển Ứng dụng Internet of Things",
     "phanBoDiem": {
       "A+": 3,
       "A": 2,
@@ -84,7 +780,23 @@
     }
   },
   {
+    "monHocId": "CO3041",
+    "tenMonHoc": "Hệ thống Thông minh",
+    "phanBoDiem": {
+      "A+": 0,
+      "A": 1,
+      "B+": 0,
+      "B": 0,
+      "C+": 0,
+      "C": 0,
+      "D+": 0,
+      "D": 0,
+      "F": 0
+    }
+  },
+  {
     "monHocId": "CO3043",
+    "tenMonHoc": "Phát triển Ứng dụng trên Thiết bị Di động",
     "phanBoDiem": {
       "A+": 0,
       "A": 5,
@@ -99,9 +811,10 @@
   },
   {
     "monHocId": "CO3045",
+    "tenMonHoc": "Lập trình Game",
     "phanBoDiem": {
-      "A+": 1,
-      "A": 4,
+      "A+": 4,
+      "A": 6,
       "B+": 0,
       "B": 0,
       "C+": 0,
@@ -113,13 +826,14 @@
   },
   {
     "monHocId": "CO3049",
+    "tenMonHoc": "Lập trình Web",
     "phanBoDiem": {
       "A+": 1,
-      "A": 6,
-      "B+": 2,
-      "B": 3,
+      "A": 7,
+      "B+": 4,
+      "B": 4,
       "C+": 2,
-      "C": 1,
+      "C": 2,
       "D+": 0,
       "D": 0,
       "F": 0
@@ -127,11 +841,12 @@
   },
   {
     "monHocId": "CO3057",
+    "tenMonHoc": "Xử lý Ảnh số và Thị giác Máy tính",
     "phanBoDiem": {
-      "A+": 0,
-      "A": 3,
-      "B+": 1,
-      "B": 1,
+      "A+": 2,
+      "A": 4,
+      "B+": 2,
+      "B": 2,
       "C+": 0,
       "C": 0,
       "D+": 0,
@@ -141,13 +856,14 @@
   },
   {
     "monHocId": "CO3059",
+    "tenMonHoc": "Đồ họa Máy tính",
     "phanBoDiem": {
       "A+": 0,
       "A": 1,
       "B+": 0,
       "B": 0,
       "C+": 0,
-      "C": 0,
+      "C": 1,
       "D+": 0,
       "D": 0,
       "F": 0
@@ -155,11 +871,12 @@
   },
   {
     "monHocId": "CO3061",
+    "tenMonHoc": "Nhập môn Trí tuệ Nhân tạo",
     "phanBoDiem": {
-      "A+": 0,
-      "A": 1,
-      "B+": 1,
-      "B": 2,
+      "A+": 2,
+      "A": 3,
+      "B+": 2,
+      "B": 5,
       "C+": 1,
       "C": 1,
       "D+": 0,
@@ -169,11 +886,12 @@
   },
   {
     "monHocId": "CO3065",
+    "tenMonHoc": "Công nghệ Phần mềm Nâng cao",
     "phanBoDiem": {
       "A+": 2,
-      "A": 9,
-      "B+": 2,
-      "B": 3,
+      "A": 14,
+      "B+": 3,
+      "B": 6,
       "C+": 0,
       "C": 0,
       "D+": 0,
@@ -183,12 +901,13 @@
   },
   {
     "monHocId": "CO3069",
+    "tenMonHoc": "Mật mã và An ninh mạng",
     "phanBoDiem": {
       "A+": 0,
       "A": 1,
       "B+": 0,
       "B": 1,
-      "C+": 0,
+      "C+": 1,
       "C": 0,
       "D+": 0,
       "D": 0,
@@ -197,10 +916,11 @@
   },
   {
     "monHocId": "CO3085",
+    "tenMonHoc": "Xử lý Ngôn ngữ Tự nhiên",
     "phanBoDiem": {
       "A+": 0,
       "A": 0,
-      "B+": 1,
+      "B+": 2,
       "B": 0,
       "C+": 0,
       "C": 0,
@@ -211,12 +931,13 @@
   },
   {
     "monHocId": "CO3089",
+    "tenMonHoc": "Những Chủ đề Nâng cao trong Khoa học Máy tính",
     "phanBoDiem": {
       "A+": 0,
-      "A": 3,
+      "A": 5,
       "B+": 1,
-      "B": 0,
-      "C+": 0,
+      "B": 1,
+      "C+": 1,
       "C": 0,
       "D+": 0,
       "D": 0,
@@ -225,11 +946,12 @@
   },
   {
     "monHocId": "CO3115",
+    "tenMonHoc": "Phân tích và Thiết kế Hệ thống",
     "phanBoDiem": {
       "A+": 1,
-      "A": 4,
+      "A": 5,
       "B+": 1,
-      "B": 1,
+      "B": 3,
       "C+": 0,
       "C": 2,
       "D+": 0,
@@ -239,13 +961,14 @@
   },
   {
     "monHocId": "CO3117",
+    "tenMonHoc": "Học máy",
     "phanBoDiem": {
-      "A+": 0,
-      "A": 2,
+      "A+": 2,
+      "A": 3,
       "B+": 1,
       "B": 3,
       "C+": 2,
-      "C": 2,
+      "C": 3,
       "D+": 0,
       "D": 0,
       "F": 0
@@ -253,8 +976,9 @@
   },
   {
     "monHocId": "CO4031",
+    "tenMonHoc": "Kho dữ Liệu và Hệ hỗ trợ Quyết định",
     "phanBoDiem": {
-      "A+": 0,
+      "A+": 1,
       "A": 1,
       "B+": 0,
       "B": 0,
@@ -267,11 +991,12 @@
   },
   {
     "monHocId": "CO4035",
+    "tenMonHoc": "Hệ hoạch Định tài Nguyên tổ chức",
     "phanBoDiem": {
       "A+": 0,
       "A": 0,
-      "B+": 0,
-      "B": 1,
+      "B+": 1,
+      "B": 2,
       "C+": 0,
       "C": 0,
       "D+": 0,

@@ -43,6 +43,7 @@ import gradeDistributionData from "@/data/gradeDistribution.json";
 /* ===================== GRADE DISTRIBUTION TYPES ===================== */
 interface GradeDistribution {
   monHocId: string;
+  tenMonHoc: string;
   phanBoDiem: {
     "A+": number;
     "A": number;
@@ -83,12 +84,12 @@ const PIE_COLORS = [
 function calculateAverageGrade(phanBoDiem: GradeDistribution["phanBoDiem"]): number {
   let totalPoints = 0;
   let totalStudents = 0;
-  
+
   Object.entries(phanBoDiem).forEach(([grade, count]) => {
     totalPoints += GRADE_VALUES[grade] * count;
     totalStudents += count;
   });
-  
+
   return totalStudents > 0 ? totalPoints / totalStudents : 0;
 }
 
@@ -204,7 +205,7 @@ export default function Diem() {
   const [videoFull, setVideoFull] = useState(false);
   const [videoPaused, setVideoPaused] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  
+
   // Grade distribution dialog
   const [distributionOpen, setDistributionOpen] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<GradeDistribution | null>(null);
@@ -291,27 +292,52 @@ export default function Diem() {
   const optionalCredits = courses.filter(c => !c.isRequired && c.diemChu !== "F").reduce((s, c) => s + c.soTinChi, 0);
   const requiredCourses = courses.filter(c => c.isRequired);
   const optionalCourses = courses.filter(c => !c.isRequired);
-
   const renderItem = (c: GradeWithOriginal) => {
     const changed = c.diemChu !== c.originalGrade;
+    const hasDistribution = gradeDistributionData.some(g => g.monHocId === c.maMonHoc);
+
     return (
-      <div key={c.maMonHoc} className={`
-          p-3 rounded-md border flex justify-between gap-2
-          ${changed ? "bg-red-50 border-red-300" : "border-border"}
-          ${c.isPredicted ? "ring-1 ring-dashed ring-orange-400" : ""}
-        `}
+      <div
+        key={c.maMonHoc}
+        className={`
+        p-3 rounded-md border flex justify-between gap-2
+        ${changed ? "bg-red-100 border-red-200" : "border-border"}
+        ${c.isPredicted ? "ring-1 ring-dashed ring-orange-200 bg-orange-50" : ""}
+      `}
       >
+        {/* Thông tin môn học */}
         <div className="min-w-0">
           <p className="text-xs font-mono text-muted-foreground">{c.maMonHoc}</p>
           <p className="text-sm font-medium truncate">{c.tenMonHoc}</p>
           {c.isPredicted && (
-            <p className="text-xs text-orange-600">(Điểm dự đoán <b>{c.predictedGrade}</b>)</p>
+            <p className="text-xs text-orange-600">
+              (Điểm dự đoán <b>{c.predictedGrade}</b>)
+            </p>
           )}
         </div>
 
+        {/* Controls: nút phân bố điểm + tín chỉ + dropdown + reset */}
         <div className="flex items-center gap-2 shrink-0">
+          {/* Nút xem phân bố điểm nếu có */}
+          {hasDistribution && (
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => {
+                const subject = gradeDistributionData.find(g => g.monHocId === c.maMonHoc) || null;
+                setSelectedSubject(subject);
+                setDistributionOpen(true);
+              }}
+              title={`Xem phân bố điểm môn ${c.tenMonHoc}`}
+            >
+              <PieChart className="h-4 w-4" />
+            </Button>
+          )}
+
+          {/* Tín chỉ */}
           <span className="text-xs">{c.soTinChi} TC</span>
 
+          {/* Dropdown chọn điểm */}
           <select
             value={c.diemChu}
             onChange={e => updateGrade(c.maMonHoc, e.target.value)}
@@ -320,6 +346,7 @@ export default function Diem() {
             {GRADE_OPTIONS.map(g => <option key={g} value={g}>{g}</option>)}
           </select>
 
+          {/* Reset nếu điểm bị thay đổi */}
           {changed && (
             <Button size="icon" variant="ghost" onClick={() => resetGrade(c.maMonHoc)}>
               <RotateCcw className="h-4 w-4 text-red-500" />
@@ -403,9 +430,6 @@ export default function Diem() {
                 }}>
                   <FileText className="mr-2 h-4 w-4" /> Dữ liệu mẫu
                 </Button>
-                <Button variant="secondary" onClick={() => setDistributionOpen(true)}>
-                  <PieChart className="mr-2 h-4 w-4" /> Thống kê phân bố điểm
-                </Button>
               </div>
             </div>
           </CardContent>
@@ -457,99 +481,50 @@ export default function Diem() {
         </Dialog>
 
         {/* Grade Distribution Dialog */}
-        <Dialog open={distributionOpen} onOpenChange={setDistributionOpen}>
-          <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <PieChart className="h-5 w-5 text-primary" />
-                Thống kê phân bố điểm các môn học
-              </DialogTitle>
-              <DialogDescription>
-                Dữ liệu phân bố điểm từ các sinh viên đã chia sẻ
-              </DialogDescription>
-            </DialogHeader>
-            
-            {!selectedSubject ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 py-4">
-                {(gradeDistributionData as GradeDistribution[]).map((subject) => {
-                  const avgGrade = calculateAverageGrade(subject.phanBoDiem);
-                  const totalStudents = Object.values(subject.phanBoDiem).reduce((a, b) => a + b, 0);
-                  return (
-                    <Button
-                      key={subject.monHocId}
-                      variant="outline"
-                      className="h-auto py-3 flex flex-col items-start gap-1"
-                      onClick={() => setSelectedSubject(subject)}
-                    >
-                      <span className="font-mono font-bold">{subject.monHocId}</span>
-                      <span className="text-xs text-muted-foreground">
-                        TB: {avgGrade.toFixed(2)} | {totalStudents} SV
-                      </span>
-                    </Button>
-                  );
-                })}
+        {distributionOpen && <Dialog open={distributionOpen} onOpenChange={setDistributionOpen}>
+          <DialogContent className="sm:max-w-lg max-h-[70vh] overflow-y-auto">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold">{selectedSubject.monHocId} {selectedSubject.tenMonHoc}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Điểm trung bình: <span className="font-bold text-primary">{calculateAverageGrade(selectedSubject.phanBoDiem).toFixed(2)}</span>
+                    {" | "}Tổng: {Object.values(selectedSubject.phanBoDiem).reduce((a, b) => a + b, 0)} sinh viên
+                  </p>
+                </div>
               </div>
-            ) : (
-              <div className="py-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xl font-bold font-mono">{selectedSubject.monHocId}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Điểm trung bình: <span className="font-bold text-primary">{calculateAverageGrade(selectedSubject.phanBoDiem).toFixed(2)}</span>
-                      {" | "}Tổng: {Object.values(selectedSubject.phanBoDiem).reduce((a, b) => a + b, 0)} sinh viên
-                    </p>
-                  </div>
-                  <Button variant="outline" onClick={() => setSelectedSubject(null)}>
-                    ← Quay lại
-                  </Button>
-                </div>
-                
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RechartsPie>
-                      <Pie
-                        data={Object.entries(selectedSubject.phanBoDiem)
-                          .filter(([_, count]) => count > 0)
-                          .map(([grade, count]) => ({
-                            name: grade,
-                            value: count
-                          }))}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={true}
-                        label={({ name, value, percent }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
-                        outerRadius={100}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {Object.entries(selectedSubject.phanBoDiem)
-                          .filter(([_, count]) => count > 0)
-                          .map(([grade], index) => {
-                            const gradeIndex = ["A+", "A", "B+", "B", "C+", "C", "D+", "D", "F"].indexOf(grade);
-                            return <Cell key={`cell-${index}`} fill={PIE_COLORS[gradeIndex]} />;
-                          })}
-                      </Pie>
-                      <Tooltip />
-                      <Legend />
-                    </RechartsPie>
-                  </ResponsiveContainer>
-                </div>
 
-                <div className="grid grid-cols-3 gap-2 text-sm">
-                  {Object.entries(selectedSubject.phanBoDiem).map(([grade, count], index) => (
-                    <div key={grade} className="flex items-center gap-2 p-2 rounded border">
-                      <div 
-                        className="w-4 h-4 rounded" 
-                        style={{ backgroundColor: PIE_COLORS[index] }}
-                      />
-                      <span className="font-mono font-bold">{grade}:</span>
-                      <span>{count} SV</span>
-                    </div>
-                  ))}
-                </div>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RechartsPie>
+                    <Pie
+                      data={Object.entries(selectedSubject.phanBoDiem)
+                        .filter(([_, count]) => count > 0)
+                        .map(([grade, count]) => ({
+                          name: grade,
+                          value: count
+                        }))}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={true}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {Object.entries(selectedSubject.phanBoDiem)
+                        .filter(([_, count]) => count > 0)
+                        .map(([grade], index) => {
+                          const gradeIndex = ["A+", "A", "B+", "B", "C+", "C", "D+", "D", "F"].indexOf(grade);
+                          return <Cell key={`cell-${index}`} fill={PIE_COLORS[gradeIndex]} />;
+                        })}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </RechartsPie>
+                </ResponsiveContainer>
               </div>
-            )}
-            
+            </div>
+
             <DialogFooter>
               <Button variant="outline" onClick={() => {
                 setDistributionOpen(false);
@@ -559,7 +534,7 @@ export default function Diem() {
               </Button>
             </DialogFooter>
           </DialogContent>
-        </Dialog>
+        </Dialog>}
 
         {/* No Data */}
         {courses.length === 0 && (
