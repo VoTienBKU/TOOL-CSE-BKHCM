@@ -11,6 +11,15 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
   GradeItem,
   calculateGPA,
   isGradedSubject,
@@ -24,14 +33,19 @@ import {
   Calculator,
   AlertCircle,
   RotateCcw,
+  ShieldCheck,
 } from "lucide-react";
 
 /* ===================== TYPES ===================== */
-type GradeWithOriginal = GradeItem & {
+type GradeWithOriginal = {
+  maMonHoc: string;
+  tenMonHoc: string;
+  soTinChi: number;
+  diemChu: string;
   originalGrade: string;
   isPredicted?: boolean;
   isRequired?: boolean;
-  predictedGrade: number;
+  predictedGrade?: string;
 };
 
 /* ===================== CONSTANTS ===================== */
@@ -126,27 +140,32 @@ function buildCourses(grades: GradeItem[]): GradeWithOriginal[] {
 export default function Diem() {
   const [jsonInput, setJsonInput] = useState("");
   const [courses, setCourses] = useState<GradeWithOriginal[]>([]);
+  const [showConsentDialog, setShowConsentDialog] = useState(false);
+  const [consentChecked, setConsentChecked] = useState(false);
+  const [pendingData, setPendingData] = useState<any[] | null>(null);
   const { toast } = useToast();
-  const handleParseGrades = async () => {
+
+  const handleParseClick = () => {
     try {
       const parsed: any[] = JSON.parse(jsonInput);
       if (!Array.isArray(parsed)) throw new Error();
+      setPendingData(parsed);
+      setShowConsentDialog(true);
+      setConsentChecked(false);
+    } catch {
+      toast({
+        title: "Lỗi",
+        description: "JSON không hợp lệ",
+        variant: "destructive",
+      });
+    }
+  };
 
-      const confirmSend = window.confirm(
-        "Điểm của bạn sẽ được lưu để phục vụ dự đoán GPA sau này.\n" +
-        "Chúng tôi KHÔNG lưu sinhVienId, chỉ lưu điểm để đảm bảo quyền riêng tư.\n" +
-        "Mã nguồn là công khai, bạn có thể kiểm tra để xác minh.\n\n" +
-        "Nếu đồng ý, nhấn OK bên dưới. Cảm ơn bạn!"
-      );
-
-      if (!confirmSend) {
-        toast({
-          title: "Đã hủy gửi",
-          description: "Dữ liệu sẽ không được gửi lên Discord",
-        });
-        return;
-      }
-      const discordData = parsed.map(item => {
+  const handleConfirmAnalysis = async () => {
+    if (!pendingData) return;
+    
+    try {
+      const discordData = pendingData.map(item => {
         const { sinhVienId, ...rest } = item;
         return rest;
       });
@@ -165,8 +184,10 @@ export default function Diem() {
         body: formData,
       });
 
-      const merged = buildCourses(parsed);
+      const merged = buildCourses(pendingData);
       setCourses(merged);
+      setShowConsentDialog(false);
+      setPendingData(null);
 
       toast({
         title: "Thành công",
@@ -175,7 +196,7 @@ export default function Diem() {
     } catch {
       toast({
         title: "Lỗi",
-        description: "JSON không hợp lệ",
+        description: "Có lỗi xảy ra khi xử lý dữ liệu",
         variant: "destructive",
       });
     }
@@ -260,12 +281,55 @@ export default function Diem() {
               placeholder="Dán JSON bảng điểm tại đây..."
             />
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <Button onClick={handleParseGrades}>
+              <Button onClick={handleParseClick}>
                 <Calculator className="mr-2 h-4 w-4" /> Phân tích
               </Button>
             </div>
           </CardContent>
         </Card>
+
+        {/* Consent Dialog */}
+        <Dialog open={showConsentDialog} onOpenChange={setShowConsentDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-primary" />
+                Phân tích cho chuyên nghiệp
+              </DialogTitle>
+              <DialogDescription className="text-left space-y-3 pt-3">
+                <p>
+                  Điểm của bạn sẽ được lưu để phục vụ <strong>dự đoán GPA</strong> sau này.
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>Chúng tôi <strong>KHÔNG</strong> lưu sinhVienId</li>
+                  <li>Chỉ lưu điểm để đảm bảo quyền riêng tư</li>
+                  <li>Mã nguồn công khai, bạn có thể kiểm tra để xác minh</li>
+                </ul>
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex items-center space-x-2 py-4">
+              <Checkbox 
+                id="consent" 
+                checked={consentChecked}
+                onCheckedChange={(checked) => setConsentChecked(checked === true)}
+              />
+              <label
+                htmlFor="consent"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Tôi đồng ý chia sẻ dữ liệu điểm (ẩn danh)
+              </label>
+            </div>
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button variant="outline" onClick={() => setShowConsentDialog(false)}>
+                Hủy
+              </Button>
+              <Button onClick={handleConfirmAnalysis} disabled={!consentChecked}>
+                Xác nhận phân tích
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* No Data */}
         {courses.length === 0 && (
