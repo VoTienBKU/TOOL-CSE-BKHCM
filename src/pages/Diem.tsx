@@ -281,7 +281,7 @@ export default function Diem() {
           <CardHeader>
             <CardTitle>Hướng dẫn nhập JSON</CardTitle>
             <CardDescription className="text-xs leading-relaxed">
-              Vào <a href="https://mybk.hcmut.edu.vn/app/sinh-vien/ket-qua-hoc-tap/bang-diem-mon-hoc" target="_blank" rel="noopener noreferrer" className="underline text-primary">myBK &gt; Bảng điểm môn học</a>, mở <b>F12</b> → tab <b>Console</b> → tìm dòng <code className="px-1 bg-muted rounded">Array(…)</code> trong file <code className="px-1 bg-muted rounded ml-1">bang-diem-mon-hoc.js</code>, kích chuột phải → copy object
+              Vào <a href="https://mybk.hcmut.edu.vn/app/sinh-vien/ket-qua-hoc-tap/bang-diem-mon-hoc" target="_blank" rel="noopener noreferrer" className="underline text-primary">myBK &gt; Bảng điểm môn học</a>, mở <b>F12</b> → tab <b>Console</b> → tìm dòng <code className="px-1 bg-muted rounded">Array(…)</code>, kích chuột phải → copy object
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
