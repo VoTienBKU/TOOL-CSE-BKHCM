@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import {
@@ -145,6 +145,10 @@ export default function Diem() {
   const [consentChecked, setConsentChecked] = useState(false);
   const [pendingData, setPendingData] = useState<any[] | null>(null);
   const { toast } = useToast();
+  const [videoOpen, setVideoOpen] = useState(true);
+  const [videoFull, setVideoFull] = useState(false);
+  const [videoPaused, setVideoPaused] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Parse directly without Discord (for sample data)
   const parseDirectly = (data: any[]) => {
@@ -475,6 +479,60 @@ export default function Diem() {
               </CardContent>
             </Card>
           </>
+        )}
+      </div>
+
+      <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
+
+        {/* Nút mở / thu nhỏ / to */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => setVideoOpen(prev => !prev)}
+            className="bg-blue-600 text-white px-3 py-1 rounded shadow hover:bg-blue-700 text-xs"
+          >
+            {videoOpen ? "Đóng video" : "Mở video"}
+          </button>
+
+          {videoOpen && (
+            <button
+              onClick={() => setVideoFull(prev => !prev)}
+              className="bg-green-600 text-white px-3 py-1 rounded shadow hover:bg-green-700 text-xs"
+            >
+              {videoFull ? "Thu nhỏ" : "Phóng to"}
+            </button>
+          )}
+        </div>
+
+        {/* Video */}
+        {videoOpen && (
+          <div
+            className={`
+          relative rounded-lg shadow-lg border border-gray-200
+           ${videoFull ? "fixed top-4 left-4 w-[90vw] h-[80vh]" : "w-96 h-56"}
+          bg-black
+        `}
+          >
+            <video
+              ref={videoRef}
+              src="/tutorial.mp4"
+              autoPlay
+              muted
+              loop
+              className="w-full h-full rounded-lg"
+            />
+            {/* Nút Play/Pause */}
+            <button
+              onClick={() => {
+                if (!videoRef.current) return;
+                if (videoPaused) videoRef.current.play();
+                else videoRef.current.pause();
+                setVideoPaused(!videoPaused);
+              }}
+              className="absolute bottom-2 right-2 bg-white bg-opacity-70 px-2 py-1 rounded shadow text-xs"
+            >
+              {videoPaused ? "Tiếp tục" : "Tạm dừng"}
+            </button>
+          </div>
         )}
       </div>
     </Layout>
